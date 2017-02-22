@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		5A8254071E5CC92B00FB8477 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A8254061E5CC92B00FB8477 /* main.cpp */; };
+		5A8254101E5CC96000FB8477 /* libglfw.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A82540D1E5CC96000FB8477 /* libglfw.dylib */; };
+		5A8254111E5CC96000FB8477 /* libGLEW.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A82540E1E5CC96000FB8477 /* libGLEW.dylib */; };
+		5A8254121E5CC96000FB8477 /* libGL.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A82540F1E5CC96000FB8477 /* libGL.dylib */; };
+		5A8254181E5CCB5000FB8477 /* loadGL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A8254161E5CCB5000FB8477 /* loadGL.cpp */; };
+		5A82541B1E5CCD2700FB8477 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A82541A1E5CCD2700FB8477 /* shader.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +30,16 @@
 /* Begin PBXFileReference section */
 		5A8254031E5CC92B00FB8477 /* AnimationGamesCW */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AnimationGamesCW; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A8254061E5CC92B00FB8477 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		5A82540D1E5CC96000FB8477 /* libglfw.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.dylib; path = ../../../../../../usr/local/Cellar/glfw/3.2.1/lib/libglfw.dylib; sourceTree = "<group>"; };
+		5A82540E1E5CC96000FB8477 /* libGLEW.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.dylib; path = ../../../../../../usr/local/Cellar/glew/2.0.0/lib/libGLEW.dylib; sourceTree = "<group>"; };
+		5A82540F1E5CC96000FB8477 /* libGL.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGL.dylib; path = ../../../../../../System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib; sourceTree = "<group>"; };
+		5A8254141E5CCA9000FB8477 /* tiny_obj_loader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tiny_obj_loader.h; path = external/tiny_obj_loader.h; sourceTree = "<group>"; };
+		5A8254161E5CCB5000FB8477 /* loadGL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = loadGL.cpp; sourceTree = "<group>"; };
+		5A8254171E5CCB5000FB8477 /* loadGL.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = loadGL.hpp; sourceTree = "<group>"; };
+		5A8254191E5CCD2700FB8477 /* shader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = shader.hpp; path = external/shader.hpp; sourceTree = "<group>"; };
+		5A82541A1E5CCD2700FB8477 /* shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = shader.cpp; path = external/shader.cpp; sourceTree = "<group>"; };
+		5A82541C1E5CCD7C00FB8477 /* SimpleFragmentShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SimpleFragmentShader.glsl; path = "GLSL Shaders/SimpleFragmentShader.glsl"; sourceTree = "<group>"; };
+		5A82541D1E5CCD7C00FB8477 /* SimpleVertexShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SimpleVertexShader.glsl; path = "GLSL Shaders/SimpleVertexShader.glsl"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +47,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A8254101E5CC96000FB8477 /* libglfw.dylib in Frameworks */,
+				5A8254121E5CC96000FB8477 /* libGL.dylib in Frameworks */,
+				5A8254111E5CC96000FB8477 /* libGLEW.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,6 +59,9 @@
 		5A8253FA1E5CC92B00FB8477 = {
 			isa = PBXGroup;
 			children = (
+				5A82540D1E5CC96000FB8477 /* libglfw.dylib */,
+				5A82540E1E5CC96000FB8477 /* libGLEW.dylib */,
+				5A82540F1E5CC96000FB8477 /* libGL.dylib */,
 				5A8254051E5CC92B00FB8477 /* AnimationGamesCW */,
 				5A8254041E5CC92B00FB8477 /* Products */,
 			);
@@ -57,9 +78,32 @@
 		5A8254051E5CC92B00FB8477 /* AnimationGamesCW */ = {
 			isa = PBXGroup;
 			children = (
+				5A82541E1E5CCDA500FB8477 /* Shaders */,
+				5A8254151E5CCA9800FB8477 /* external */,
 				5A8254061E5CC92B00FB8477 /* main.cpp */,
+				5A8254161E5CCB5000FB8477 /* loadGL.cpp */,
+				5A8254171E5CCB5000FB8477 /* loadGL.hpp */,
 			);
 			path = AnimationGamesCW;
+			sourceTree = "<group>";
+		};
+		5A8254151E5CCA9800FB8477 /* external */ = {
+			isa = PBXGroup;
+			children = (
+				5A8254191E5CCD2700FB8477 /* shader.hpp */,
+				5A82541A1E5CCD2700FB8477 /* shader.cpp */,
+				5A8254141E5CCA9000FB8477 /* tiny_obj_loader.h */,
+			);
+			name = external;
+			sourceTree = "<group>";
+		};
+		5A82541E1E5CCDA500FB8477 /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				5A82541C1E5CCD7C00FB8477 /* SimpleFragmentShader.glsl */,
+				5A82541D1E5CCD7C00FB8477 /* SimpleVertexShader.glsl */,
+			);
+			name = Shaders;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -119,6 +163,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A82541B1E5CCD2700FB8477 /* shader.cpp in Sources */,
+				5A8254181E5CCB5000FB8477 /* loadGL.cpp in Sources */,
 				5A8254071E5CC92B00FB8477 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -166,10 +212,15 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/Cellar/glfw/3.2.1/include\n/usr/local/Cellar/glew/2.0.0/include",
+					/usr/local/Cellar/glew/2.0.0/include,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = /external;
 			};
 			name = Debug;
 		};
@@ -207,15 +258,26 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/Cellar/glfw/3.2.1/include\n/usr/local/Cellar/glew/2.0.0/include",
+					/usr/local/Cellar/glew/2.0.0/include,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = /external;
 			};
 			name = Release;
 		};
 		5A82540B1E5CC92B00FB8477 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/glfw/3.2.1/lib,
+					/usr/local/Cellar/glew/2.0.0/lib,
+					"$(SYSTEM_LIBRARY_DIR)/Frameworks/OpenGL.framework/Versions/A/Libraries",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -223,6 +285,12 @@
 		5A82540C1E5CC92B00FB8477 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/glfw/3.2.1/lib,
+					/usr/local/Cellar/glew/2.0.0/lib,
+					"$(SYSTEM_LIBRARY_DIR)/Frameworks/OpenGL.framework/Versions/A/Libraries",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
