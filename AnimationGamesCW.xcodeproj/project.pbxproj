@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5A1CC4E21E609E7C00015854 /* cameracontroller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A1CC4E01E609E7C00015854 /* cameracontroller.cpp */; };
 		5A545F371E5F007E0009AB6C /* objloader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A545F361E5F007E0009AB6C /* objloader.cpp */; };
 		5A8254071E5CC92B00FB8477 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A8254061E5CC92B00FB8477 /* main.cpp */; };
 		5A8254101E5CC96000FB8477 /* libglfw.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A82540D1E5CC96000FB8477 /* libglfw.dylib */; };
@@ -29,6 +30,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5A1CC4E01E609E7C00015854 /* cameracontroller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cameracontroller.cpp; sourceTree = "<group>"; };
+		5A1CC4E11E609E7C00015854 /* cameracontroller.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cameracontroller.hpp; sourceTree = "<group>"; };
 		5A545F351E5F007E0009AB6C /* objloader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = objloader.hpp; path = external/objloader.hpp; sourceTree = "<group>"; };
 		5A545F361E5F007E0009AB6C /* objloader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = objloader.cpp; path = external/objloader.cpp; sourceTree = "<group>"; };
 		5A8254031E5CC92B00FB8477 /* AnimationGamesCW */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AnimationGamesCW; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -83,6 +86,8 @@
 				5A82541E1E5CCDA500FB8477 /* Shaders */,
 				5A8254151E5CCA9800FB8477 /* external */,
 				5A8254061E5CC92B00FB8477 /* main.cpp */,
+				5A1CC4E01E609E7C00015854 /* cameracontroller.cpp */,
+				5A1CC4E11E609E7C00015854 /* cameracontroller.hpp */,
 				5A8254161E5CCB5000FB8477 /* loadGL.cpp */,
 				5A8254171E5CCB5000FB8477 /* loadGL.hpp */,
 			);
@@ -167,6 +172,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5A82541B1E5CCD2700FB8477 /* shader.cpp in Sources */,
+				5A1CC4E21E609E7C00015854 /* cameracontroller.cpp in Sources */,
 				5A8254181E5CCB5000FB8477 /* loadGL.cpp in Sources */,
 				5A545F371E5F007E0009AB6C /* objloader.cpp in Sources */,
 				5A8254071E5CC92B00FB8477 /* main.cpp in Sources */,
