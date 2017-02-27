@@ -12,6 +12,7 @@ bool loadSimpleOBJ(const char * path,std::vector<glm::vec3> & out_vertices,std::
 
 
 
+
 bool loadAssImp(
 	const char * path, 
 	std::vector<unsigned short> & indices,
