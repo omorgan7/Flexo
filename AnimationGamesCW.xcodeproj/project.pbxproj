@@ -15,6 +15,8 @@
 		5A8254121E5CC96000FB8477 /* libGL.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A82540F1E5CC96000FB8477 /* libGL.dylib */; };
 		5A8254181E5CCB5000FB8477 /* loadGL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A8254161E5CCB5000FB8477 /* loadGL.cpp */; };
 		5A82541B1E5CCD2700FB8477 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A82541A1E5CCD2700FB8477 /* shader.cpp */; };
+		5AF109381E64424E00EBC9CD /* HandleFragmentShader.glsl in Sources */ = {isa = PBXBuildFile; fileRef = 5AF109371E64424E00EBC9CD /* HandleFragmentShader.glsl */; };
+		5AF1093A1E64427500EBC9CD /* HandleVertexShader.glsl in Sources */ = {isa = PBXBuildFile; fileRef = 5AF109391E64427500EBC9CD /* HandleVertexShader.glsl */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -45,6 +47,8 @@
 		5A82541A1E5CCD2700FB8477 /* shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = shader.cpp; path = external/shader.cpp; sourceTree = "<group>"; };
 		5A82541C1E5CCD7C00FB8477 /* SimpleFragmentShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SimpleFragmentShader.glsl; path = "GLSL Shaders/SimpleFragmentShader.glsl"; sourceTree = "<group>"; };
 		5A82541D1E5CCD7C00FB8477 /* SimpleVertexShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SimpleVertexShader.glsl; path = "GLSL Shaders/SimpleVertexShader.glsl"; sourceTree = "<group>"; };
+		5AF109371E64424E00EBC9CD /* HandleFragmentShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = HandleFragmentShader.glsl; path = "GLSL Shaders/HandleFragmentShader.glsl"; sourceTree = "<group>"; };
+		5AF109391E64427500EBC9CD /* HandleVertexShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = HandleVertexShader.glsl; path = "GLSL Shaders/HandleVertexShader.glsl"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,7 +113,9 @@
 			isa = PBXGroup;
 			children = (
 				5A82541C1E5CCD7C00FB8477 /* SimpleFragmentShader.glsl */,
+				5AF109371E64424E00EBC9CD /* HandleFragmentShader.glsl */,
 				5A82541D1E5CCD7C00FB8477 /* SimpleVertexShader.glsl */,
+				5AF109391E64427500EBC9CD /* HandleVertexShader.glsl */,
 			);
 			name = Shaders;
 			sourceTree = "<group>";
@@ -171,11 +177,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5AF109381E64424E00EBC9CD /* HandleFragmentShader.glsl in Sources */,
 				5A82541B1E5CCD2700FB8477 /* shader.cpp in Sources */,
 				5A1CC4E21E609E7C00015854 /* cameracontroller.cpp in Sources */,
 				5A8254181E5CCB5000FB8477 /* loadGL.cpp in Sources */,
 				5A545F371E5F007E0009AB6C /* objloader.cpp in Sources */,
 				5A8254071E5CC92B00FB8477 /* main.cpp in Sources */,
+				5AF1093A1E64427500EBC9CD /* HandleVertexShader.glsl in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
