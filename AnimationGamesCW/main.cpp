@@ -20,7 +20,8 @@
 #include "loadGL.hpp"
 #include "cameracontroller.hpp"
 
-int global_mouse_toggle = 1;
+int global_mouse_press = 0;
+bool global_mouse_toggle = 0;
 double global_xpos = 0;
 double global_ypos= 0;
 
@@ -30,8 +31,21 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
     if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS){
         glfwGetCursorPos(window, &global_xpos, &global_ypos);
         //std::cout<<"mouse pressed at "<<global_xpos<<", "<<global_ypos<<"\n";
-        global_mouse_toggle = global_mouse_toggle;
+        global_mouse_press++;
+        global_mouse_toggle = !global_mouse_toggle;
     }
+
+}
+
+void convertScreenPointsToWorldPoints(int width, int height, glm::mat4 * inverseProjection, float * x, float * y){
+    glm::vec4 translation = glm::vec4( 2.0 * global_xpos / width - 1,
+                                      -2.0 * global_ypos / height + 1,0,1);
+    glm::vec4 mappedTranslation = *inverseProjection*translation;
+    
+    //std::cout<<ModelMat[3][0]<<" "<<ModelMat[3][1]<<"\n";
+    
+    *x = mappedTranslation.x*mappedTranslation.z/mappedTranslation.w;
+    *y = mappedTranslation.y*mappedTranslation.z/mappedTranslation.w;
 
 }
 
@@ -80,44 +94,13 @@ int main(int argc, const char * argv[]) {
         i->y = -temp;
     }
     static GLfloat cube_data[] = {
-        -1.0f,-1.0f,-1.0f,
-        -1.0f,-1.0f, 1.0f,
-        -1.0f, 1.0f, 1.0f,
-        1.0f, 1.0f,-1.0f,
-        -1.0f,-1.0f,-1.0f,
-        -1.0f, 1.0f,-1.0f,
-        1.0f,-1.0f, 1.0f,
-        -1.0f,-1.0f,-1.0f,
-        1.0f,-1.0f,-1.0f,
-        1.0f, 1.0f,-1.0f,
-        1.0f,-1.0f,-1.0f,
-        -1.0f,-1.0f,-1.0f,
-        -1.0f,-1.0f,-1.0f,
-        -1.0f, 1.0f, 1.0f,
-        -1.0f, 1.0f,-1.0f,
-        1.0f,-1.0f, 1.0f,
-        -1.0f,-1.0f, 1.0f,
-        -1.0f,-1.0f,-1.0f,
-        -1.0f, 1.0f, 1.0f,
-        -1.0f,-1.0f, 1.0f,
-        1.0f,-1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f,
-        1.0f,-1.0f,-1.0f,
-        1.0f, 1.0f,-1.0f,
-        1.0f,-1.0f,-1.0f,
-        1.0f, 1.0f, 1.0f,
-        1.0f,-1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f,
-        1.0f, 1.0f,-1.0f,
-        -1.0f, 1.0f,-1.0f,
-        1.0f, 1.0f, 1.0f,
-        -1.0f, 1.0f,-1.0f,
-        -1.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f,
-        -1.0f, 1.0f, 1.0f,
-        1.0f,-1.0f, 1.0f
+        -0.3f, 0.3f, 0.0f,
+        -0.3f,-0.3f, 0.0f,
+         0.3f,-0.3f, 0.0f,
+         0.3f, 0.3f, 0.0f,
+        -0.3f, 0.3f, 0.0f,
+         0.3f,-0.3f, 0.0f
     };
-    GLfloat scaled_cubedata [108] = {0};
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     //vertices
     GLuint vertexbuffer;
@@ -147,17 +130,22 @@ int main(int argc, const char * argv[]) {
     computeScalingMatrix(width,height,&ProjectionMat);
     
     glm::mat4 shapeMVP = ProjectionMat*ViewMat*ModelMat;
-    ModelMat = glm::mat4(0.5);
+    ModelMat = glm::mat4(0.3);
+    ModelMat[3][0] = -2;
+    ModelMat[3][1] = -2;
+    ModelMat[3][3] = 1;
     glm::mat4 handleMVP = ProjectionMat*ViewMat*ModelMat;
-    
+    glm::mat4 inverseProjection = glm::inverse(shapeMVP);
+    std::vector<glm::vec2> screenCoords = std::vector<glm::vec2>(3);
+    int iterator_max = 0;
     do{
-        glUniformMatrix4fv(ShapeMatID, 1, GL_FALSE, &shapeMVP[0][0]);
-        glUniformMatrix4fv(handleMatID, 1, GL_FALSE, &handleMVP[0][0]);
+        
         // Clear the screen
         glClear( GL_COLOR_BUFFER_BIT );
         
         // Use our shader
         glUseProgram(shapeprogramID);
+        glUniformMatrix4fv(ShapeMatID, 1, GL_FALSE, &shapeMVP[0][0]);
 
         
         // 1rst attribute buffer : vertices
@@ -167,25 +155,32 @@ int main(int argc, const char * argv[]) {
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
         
 
-        // Draw the triangle !
+        // Draw the mesh
         glDrawElements(GL_TRIANGLES,vertexIndices.size(), GL_UNSIGNED_INT,0); // 3 indices starting at 0 -> 1 triangle
         
-        //glEnableVertexAttribArray(1);
-        glBindBuffer(GL_ARRAY_BUFFER, cubebuffer);
-        glVertexAttribPointer(
-                              0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
-                              3,                  // size
-                              GL_FLOAT,           // type
-                              GL_FALSE,           // normalized?
-                              0,                  // stride
-                              (void*)0            // array buffer offset
-                              );
-        glfwSetMouseButtonCallback(window, mouse_button_callback);
-        //glUseProgram(handleprogramID);
+        
+        glUseProgram(handleprogramID);
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-        glDrawArrays(GL_TRIANGLES, 0, 12*3);
+        if(global_mouse_toggle){
+            global_mouse_toggle = !global_mouse_toggle;
+            convertScreenPointsToWorldPoints(width, height, &inverseProjection, &screenCoords[global_mouse_press%3][0], &screenCoords[global_mouse_press%3][1]);
+        }
+        for(int i = 0; i<3; i++){
+            ModelMat[3].x = screenCoords[i][0];
+            ModelMat[3].y = screenCoords[i][1];
+            handleMVP = ProjectionMat*ViewMat*ModelMat;
+            glUniformMatrix4fv(handleMatID, 1, GL_FALSE, &handleMVP[0][0]);
+            glBindBuffer(GL_ARRAY_BUFFER, cubebuffer);
+            glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,(void*)0);
+            glDrawArrays(GL_TRIANGLES, 0, 2*3);
+        }
+//        //glVertexAttribPointer(attribute,sizeof each vertex,type,normalised?,stride,buffer offset);
+//        // attribute. No particular reason for 0, but must match the layout in the shader.
+//        // stride = distance from one entity to the distance to the next entity.
+//        
+        glfwSetMouseButtonCallback(window, mouse_button_callback);
+        
         glDisableVertexAttribArray(0);
-        //glDisableVertexAttribArray(1);
         
         // Swap buffers
         glfwSwapBuffers(window);
@@ -198,6 +193,8 @@ int main(int argc, const char * argv[]) {
     // Cleanup VBO
     glDeleteBuffers(1, &vertexbuffer);
     glDeleteVertexArrays(1, &VertexArrayID);
+    glDeleteBuffers(1,&cubebuffer);
+    glDeleteProgram(handleprogramID);
     glDeleteProgram(shapeprogramID);
     
     // Close OpenGL window and terminate GLFW
