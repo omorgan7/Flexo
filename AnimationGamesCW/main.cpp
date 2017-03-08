@@ -13,29 +13,50 @@
 #include <vector>
 
 #include <string>
+#include <cmath>
 
 
 #include "shader.hpp"
 #include "objloader.hpp"
 #include "loadGL.hpp"
 #include "cameracontroller.hpp"
+#include "meshdeform.hpp"
 
-int global_mouse_press = 0;
+int global_mouse_press = -1;
 bool global_mouse_toggle = 0;
 double global_xpos = 0;
 double global_ypos= 0;
+
 
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
     if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS){
         glfwGetCursorPos(window, &global_xpos, &global_ypos);
-        //std::cout<<"mouse pressed at "<<global_xpos<<", "<<global_ypos<<"\n";
         global_mouse_press++;
         global_mouse_toggle = !global_mouse_toggle;
     }
 
 }
+
+inline float two_norm( float x1, float y1, float x2, float y2){
+    return (float) sqrt((x1 - x2)*(x1-x2) + (y1-y2)*(y1-y2));
+}
+
+int findVertexModelIndex(std::vector<glm::vec3> vertices, float targetX, float targetY){
+    auto index = 0;
+    auto distance = two_norm(vertices[0].x, vertices[0].y, targetX, targetY);
+    for(auto i =1; i<vertices.size(); i++){
+        auto new_distance = two_norm(vertices[i].x, vertices[i].y, targetX, targetY);
+        if(new_distance < distance){
+            distance = new_distance;
+            index = i;
+        }
+    }
+    return index;
+}
+
+
 
 void convertScreenPointsToWorldPoints(int width, int height, glm::mat4 * inverseProjection, float * x, float * y){
     glm::vec4 translation = glm::vec4( 2.0 * global_xpos / width - 1,
@@ -57,6 +78,7 @@ int main(int argc, const char * argv[]) {
     if(!GLFW_Initialisation_function(&window, width, height)){
         return EXIT_FAILURE;
     }
+    Handles handle;
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f); //makes the screen blue.
     // Enable depth test
     //glEnable(GL_DEPTH_TEST);
@@ -80,10 +102,10 @@ int main(int argc, const char * argv[]) {
     fragmentPath = ShaderPath + "HandleFragmentShader.glsl";
     GLuint handleprogramID = LoadShaders( vertexPath.c_str(), fragmentPath.c_str());
     GLuint handleMatID = glGetUniformLocation(handleprogramID,"MVP");
+    GLuint handleColorID = glGetUniformLocation(handleprogramID,"inColor");
     std::vector<glm::vec3> vertices;
     std::vector<unsigned int> vertexIndices;
-//    std::vector<glm::vec2> uvs;
-//    std::vector<glm::vec3> normals;
+
     
     bool res = loadSimpleOBJ("/Users/Owen/Dropbox/bender.obj", vertices, vertexIndices);
     std::cout<<res<<"\n";
@@ -130,15 +152,42 @@ int main(int argc, const char * argv[]) {
     computeScalingMatrix(width,height,&ProjectionMat);
     
     glm::mat4 shapeMVP = ProjectionMat*ViewMat*ModelMat;
-    ModelMat = glm::mat4(0.3);
+    ModelMat = glm::mat4(0.2);
     ModelMat[3][0] = -2;
     ModelMat[3][1] = -2;
     ModelMat[3][3] = 1;
     glm::mat4 handleMVP = ProjectionMat*ViewMat*ModelMat;
     glm::mat4 inverseProjection = glm::inverse(shapeMVP);
-    std::vector<glm::vec2> screenCoords = std::vector<glm::vec2>(3);
-    int iterator_max = 0;
+    std::vector<glm::vec2> screenCoords = std::vector<glm::vec2>(4);
+    glm::vec3 handleColor = glm::vec3(0.4f,0.8f,1.0f);
     do{
+        
+        if(global_mouse_toggle){
+            global_mouse_toggle = !global_mouse_toggle;
+            convertScreenPointsToWorldPoints(width, height, &inverseProjection, &screenCoords[global_mouse_press%4][0], &screenCoords[global_mouse_press%4][1]);
+            if(global_mouse_press%4 == 3){
+                handle.newHandleIndex = findVertexModelIndex(vertices, screenCoords[global_mouse_press%4][0], screenCoords[global_mouse_press%4][1]);
+                handle.newCoords[0] = screenCoords[global_mouse_press%4][0];
+                handle.newCoords[1] = screenCoords[global_mouse_press%4][1];
+                handle.newHandleIndex = 0;
+                auto distance = two_norm(vertices[handle.handleIndex[0]].x, vertices[handle.handleIndex[0]].y, handle.newCoords[0], handle.newCoords[1]);
+                for(int i = 1; i<3; i++){
+                    auto new_distance = two_norm(vertices[handle.handleIndex[i]].x, vertices[handle.handleIndex[i]].y, handle.newCoords[0], handle.newCoords[1]);
+                    if(new_distance < distance){
+                        distance = new_distance;
+                        handle.newHandleIndex = i;
+                    }
+                }
+                deformMesh(&vertices, &vertexIndices, &handle);
+                glBindBuffer(GL_ARRAY_BUFFER,vertexbuffer);
+                glBufferSubData(GL_ARRAY_BUFFER,0, vertices.size()*sizeof(glm::vec3), &vertices[0]);
+                //glBindBuffer(GL_ARRAY_BUFFER,0);
+                
+            }
+            else{
+                handle.handleIndex[global_mouse_press%4] = findVertexModelIndex(vertices, screenCoords[global_mouse_press%4][0], screenCoords[global_mouse_press%4][1]);
+            }
+        }
         
         // Clear the screen
         glClear( GL_COLOR_BUFFER_BIT );
@@ -161,15 +210,20 @@ int main(int argc, const char * argv[]) {
         
         glUseProgram(handleprogramID);
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-        if(global_mouse_toggle){
-            global_mouse_toggle = !global_mouse_toggle;
-            convertScreenPointsToWorldPoints(width, height, &inverseProjection, &screenCoords[global_mouse_press%3][0], &screenCoords[global_mouse_press%3][1]);
-        }
-        for(int i = 0; i<3; i++){
+        
+        //draw the 4 handles.
+        for(int i = 0; i<4; i++){
             ModelMat[3].x = screenCoords[i][0];
             ModelMat[3].y = screenCoords[i][1];
             handleMVP = ProjectionMat*ViewMat*ModelMat;
             glUniformMatrix4fv(handleMatID, 1, GL_FALSE, &handleMVP[0][0]);
+            if(i==3){
+                handleColor = glm::vec3(1.0f,0.0f,0.0f);
+            }
+            else{
+                handleColor = glm::vec3(0.4f,0.8f,1.0f);
+            }
+            glUniform3fv(handleColorID,1, &handleColor[0]);
             glBindBuffer(GL_ARRAY_BUFFER, cubebuffer);
             glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,0,(void*)0);
             glDrawArrays(GL_TRIANGLES, 0, 2*3);
