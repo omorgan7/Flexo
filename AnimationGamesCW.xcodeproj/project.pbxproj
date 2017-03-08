@@ -15,6 +15,7 @@
 		5A8254121E5CC96000FB8477 /* libGL.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A82540F1E5CC96000FB8477 /* libGL.dylib */; };
 		5A8254181E5CCB5000FB8477 /* loadGL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A8254161E5CCB5000FB8477 /* loadGL.cpp */; };
 		5A82541B1E5CCD2700FB8477 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A82541A1E5CCD2700FB8477 /* shader.cpp */; };
+		5A904F441E70191D009ED14D /* meshdeform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A904F421E70191D009ED14D /* meshdeform.cpp */; };
 		5AF109381E64424E00EBC9CD /* HandleFragmentShader.glsl in Sources */ = {isa = PBXBuildFile; fileRef = 5AF109371E64424E00EBC9CD /* HandleFragmentShader.glsl */; };
 		5AF1093A1E64427500EBC9CD /* HandleVertexShader.glsl in Sources */ = {isa = PBXBuildFile; fileRef = 5AF109391E64427500EBC9CD /* HandleVertexShader.glsl */; };
 /* End PBXBuildFile section */
@@ -47,6 +48,8 @@
 		5A82541A1E5CCD2700FB8477 /* shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = shader.cpp; path = external/shader.cpp; sourceTree = "<group>"; };
 		5A82541C1E5CCD7C00FB8477 /* SimpleFragmentShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SimpleFragmentShader.glsl; path = "GLSL Shaders/SimpleFragmentShader.glsl"; sourceTree = "<group>"; };
 		5A82541D1E5CCD7C00FB8477 /* SimpleVertexShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SimpleVertexShader.glsl; path = "GLSL Shaders/SimpleVertexShader.glsl"; sourceTree = "<group>"; };
+		5A904F421E70191D009ED14D /* meshdeform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = meshdeform.cpp; sourceTree = "<group>"; };
+		5A904F431E70191D009ED14D /* meshdeform.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = meshdeform.hpp; sourceTree = "<group>"; };
 		5AF109371E64424E00EBC9CD /* HandleFragmentShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = HandleFragmentShader.glsl; path = "GLSL Shaders/HandleFragmentShader.glsl"; sourceTree = "<group>"; };
 		5AF109391E64427500EBC9CD /* HandleVertexShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = HandleVertexShader.glsl; path = "GLSL Shaders/HandleVertexShader.glsl"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -90,6 +93,8 @@
 				5A82541E1E5CCDA500FB8477 /* Shaders */,
 				5A8254151E5CCA9800FB8477 /* external */,
 				5A8254061E5CC92B00FB8477 /* main.cpp */,
+				5A904F421E70191D009ED14D /* meshdeform.cpp */,
+				5A904F431E70191D009ED14D /* meshdeform.hpp */,
 				5A1CC4E01E609E7C00015854 /* cameracontroller.cpp */,
 				5A1CC4E11E609E7C00015854 /* cameracontroller.hpp */,
 				5A8254161E5CCB5000FB8477 /* loadGL.cpp */,
@@ -178,6 +183,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5AF109381E64424E00EBC9CD /* HandleFragmentShader.glsl in Sources */,
+				5A904F441E70191D009ED14D /* meshdeform.cpp in Sources */,
 				5A82541B1E5CCD2700FB8477 /* shader.cpp in Sources */,
 				5A1CC4E21E609E7C00015854 /* cameracontroller.cpp in Sources */,
 				5A8254181E5CCB5000FB8477 /* loadGL.cpp in Sources */,
@@ -199,15 +205,18 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_ASSIGN_ENUM = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = NO;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -224,17 +233,29 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
+				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				GCC_WARN_SHADOW = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					/usr/local/Cellar/glfw/3.2.1/include,
 					/usr/local/Cellar/glew/2.0.0/include,
 					/usr/local/Cellar/glew/2.0.0/include,
 					/usr/local/Cellar/glm/0.9.8.3/include,
+					/usr/local/Cellar/eigen/3.3.3/include/eigen3,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -253,15 +274,18 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_ASSIGN_ENUM = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_IMPLICIT_SIGN_CONVERSION = NO;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -272,17 +296,29 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
+				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
+				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
+				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES;
+				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
+				GCC_WARN_SHADOW = YES;
+				GCC_WARN_SIGN_COMPARE = YES;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_LABEL = YES;
+				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					/usr/local/Cellar/glfw/3.2.1/include,
 					/usr/local/Cellar/glew/2.0.0/include,
 					/usr/local/Cellar/glew/2.0.0/include,
 					/usr/local/Cellar/glm/0.9.8.3/include,
+					/usr/local/Cellar/eigen/3.3.3/include/eigen3,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
