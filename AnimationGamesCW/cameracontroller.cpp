@@ -15,7 +15,7 @@ void computeScalingMatrix(int window_width, int window_height, glm::mat4 * Proje
     float aspectRatio = (float)window_width/(float)window_height;
     
     // Projection matrix : 45∞ Field of View, aspect ratio, display range : 0.1 unit <-> 100 units
-    *ProjectionMatrix = glm::perspective(glm::radians(FoV), aspectRatio, 0.1f, 100.0f);
+    *ProjectionMatrix = glm::perspective(glm::radians(FoV), aspectRatio, 0.001f, 100.0f);
     // Camera matrix
 
 }
