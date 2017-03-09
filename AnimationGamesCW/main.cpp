@@ -11,7 +11,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <vector>
-#include <omp.h>
+//#include <omp.h>
 #include <string>
 #include <cmath>
 
@@ -101,8 +101,8 @@ int main(int argc, const char * argv[]) {
     glBindVertexArray(VertexArrayID);
     
     // Create and compile our GLSL program from the shaders
-    //std::string ShaderPath = "/Users/Owen/Documents/Code/C++/AnimationGamesCW/AnimationGamesCW/GLSL Shaders/";
-    std::string ShaderPath = "H:/dos/C++/Bender/AnimationGamesCW/GLSL Shaders/";
+    std::string ShaderPath = "/Users/Owen/Documents/Code/C++/AnimationGamesCW/AnimationGamesCW/GLSL Shaders/";
+    //std::string ShaderPath = "H:/dos/C++/Bender/AnimationGamesCW/GLSL Shaders/";
     auto vertexPath = ShaderPath + "SimpleVertexShader.glsl";
     auto fragmentPath = ShaderPath + "SimpleFragmentShader.glsl";
     GLuint shapeprogramID = LoadShaders( vertexPath.c_str(), fragmentPath.c_str());
@@ -116,9 +116,8 @@ int main(int argc, const char * argv[]) {
     std::vector<unsigned int> vertexIndices;
 
     
-    //bool res = loadSimpleOBJ("/Users/Owen/Dropbox/bender.obj", vertices, vertexIndices);
-    bool res = loadSimpleOBJ("C:/Dropbox/Dropbox/bender.obj", vertices, vertexIndices);
-    std::cout<<res<<"\n";
+    bool res = loadSimpleOBJ("/Users/Owen/Dropbox/bender.obj", vertices, vertexIndices);
+    //bool res = loadSimpleOBJ("C:/Dropbox/Dropbox/bender.obj", vertices, vertexIndices);
     float temp;
     for(auto i = vertices.begin(); i !=vertices.end(); i++){
         temp = i->x;
@@ -170,8 +169,8 @@ int main(int argc, const char * argv[]) {
     glm::mat4 inverseProjection = glm::inverse(shapeMVP);
     std::vector<glm::vec2> screenCoords = std::vector<glm::vec2>(4);
     glm::vec3 handleColor = glm::vec3(0.4f,0.8f,1.0f);
-    std::vector<size_t[4]> edgeNBH;
-    getEdgeNeighbourHoods(&vertices, &vertexIndices,&edgeNBH);
+    std::vector<std::vector<size_t> > edgeNBH;
+    getEdgeNeighbourHoods(&vertexIndices,&edgeNBH);
     do{
         
         if(global_left_toggle){

@@ -9,7 +9,7 @@
 #include "meshdeform.hpp"
 #include <cmath>
 
-void deformMesh(std::vector<glm::vec3> *vertices, std::vector<unsigned int> * vertexIndices, Handles * handle,std::vector<size_t[4]> * edgeNBH){
+void deformMesh(std::vector<glm::vec3> *vertices, std::vector<unsigned int> * vertexIndices, Handles * handle,std::vector<std::vector<size_t> > * edgeNBH){
     std::vector<glm::vec3> intermediateVertices = std::vector<glm::vec3>(vertices->size());
     std::vector<Eigen::MatrixXf> G_vector;
     MeshDeformStepOne(vertices, vertexIndices, handle, &intermediateVertices, &G_vector, edgeNBH);
@@ -23,7 +23,7 @@ std::vector<unsigned int> * vertexIndices,
 Handles * handle,
 std::vector<glm::vec3> * intermediateVertices,
 std::vector<Eigen::MatrixXf> * G_vector,
-std::vector<size_t[4]> * edgeNBH
+std::vector<std::vector<size_t> > * edgeNBH
 ){
     
     int w = 1000;
@@ -51,11 +51,9 @@ std::vector<size_t[4]> * edgeNBH
     *G_vector = std::vector<Eigen::MatrixXf>(vertexIndices->size());
     for(size_t i = 0; i<vertexIndices->size(); i++){
         size_t vr = (*edgeNBH)[i][3];
-        int v_nbh_length =4;
         
         size_t vi = (*edgeNBH)[i][0];
         size_t vj = (*edgeNBH)[i][1];
-        size_t vl = (*edgeNBH)[i][2];
         if(vr == vertexIndices->size()){
             for(int k = 0; k<3; k++){
                 G_6(2*k,0) = vertices[0][(*edgeNBH)[i][k]].x;
@@ -144,7 +142,7 @@ std::vector<unsigned int> * vertexIndices,
 Handles * handle,
 std::vector<glm::vec3> * intermediateVertices,
 std::vector<Eigen::MatrixXf> * G_vector,
-std::vector<size_t[4]> * edgeNBH
+std::vector<std::vector<size_t> > * edgeNBH
 ){
     int w = 1000;
     Eigen::MatrixXf A  = Eigen::MatrixXf::Zero(vertexIndices->size() + 3,vertices->size());
@@ -163,7 +161,7 @@ std::vector<size_t[4]> * edgeNBH
         }
         A(vertexIndices->size() +i,handle->handleIndex[i]) = w;
     }
-    for(int i=0;i<vertexIndices->size(); i++){
+    for(size_t i=0; i<vertexIndices->size(); i++){
         size_t vr = (*edgeNBH)[i][3];
         int numIndices =4;
         if(vr == vertexIndices->size()){
@@ -174,8 +172,8 @@ std::vector<size_t[4]> * edgeNBH
             V_NBH.resize(8);
         }
         for(int j = 0; j<numIndices; j++){
-            V_NBH(2*j) = vertices[0][(*edgeNBH)[i][j]].x;
-            V_NBH(2*j+1) = vertices[0][(*edgeNBH)[i][j]].y;
+            V_NBH(2*j) = intermediateVertices[0][(*edgeNBH)[i][j]].x;
+            V_NBH(2*j+1) = intermediateVertices[0][(*edgeNBH)[i][j]].y;
         }
         Eigen::MatrixXf G = (*G_vector)[i];
         Eigen::VectorXf cs = G*V_NBH;
@@ -202,8 +200,8 @@ std::vector<size_t[4]> * edgeNBH
 
 }
 
-void getEdgeNeighbourHoods(std::vector<glm::vec3> * vertices, std::vector<unsigned int> * vertexIndices,std::vector<size_t[4]> * edgeNBH){
-    *edgeNBH = std::vector<size_t[4]>(vertexIndices->size());
+void getEdgeNeighbourHoods(std::vector<unsigned int> * vertexIndices,std::vector<std::vector<size_t> > * edgeNBH){
+    *edgeNBH = std::vector<std::vector<size_t> >(vertexIndices->size());
     size_t vi;
     size_t vj;
     size_t vl;
@@ -247,9 +245,9 @@ void getEdgeNeighbourHoods(std::vector<glm::vec3> * vertices, std::vector<unsign
                 break;
             }
         }
-        (*edgeNBH)[i][0] = vi;
-        (*edgeNBH)[i][1] = vj;
-        (*edgeNBH)[i][2] = vl;
-        (*edgeNBH)[i][3] = vr;
+        (*edgeNBH)[i].push_back(vi);
+        (*edgeNBH)[i].push_back(vj);
+        (*edgeNBH)[i].push_back(vl);
+        (*edgeNBH)[i].push_back(vr);
     }
 }
