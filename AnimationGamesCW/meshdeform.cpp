@@ -29,10 +29,25 @@ std::vector<size_t[4]> * edgeNBH
     int w = 1000;
     Eigen::MatrixXf A = Eigen::MatrixXf::Zero(vertexIndices->size() * 2 + 6,vertices->size() * 2);
     Eigen::VectorXf B = Eigen::VectorXf::Zero(vertexIndices->size() * 2 + 6);
-    Eigen::MatrixXf Edge(2,8);
-    Eigen::MatrixXf G(8,4);
-    Eigen::MatrixXf H(2,8);
+    Eigen::MatrixXf Edge_8(2,8);
+    Eigen::MatrixXf Edge_6(2,6);
+    Eigen::MatrixXf G_8(8,4);
+    Eigen::MatrixXf G_inv_8(8,4);
+    Eigen::MatrixXf G_6(6,4);
+    Eigen::MatrixXf G_inv_6(6,4);
+    Eigen::MatrixXf H_8(2,8);
+    Eigen::MatrixXf H_6(2,6);
     Eigen::MatrixXf EdgeMat(2,2);
+    Eigen::MatrixXf h_8(2,8);
+    Eigen::MatrixXf h_6(2,6);
+
+    Edge_6<<
+    -1,0,1,0, 0,0,
+    0,-1,0,1, 0,0;
+    Edge_8<< 
+    -1,0,1,0, 0,0,0,0,
+    0,-1,0,1, 0,0,0,0;
+
     *G_vector = std::vector<Eigen::MatrixXf>(vertexIndices->size());
     for(size_t i = 0; i<vertexIndices->size(); i++){
         size_t vr = (*edgeNBH)[i][3];
@@ -41,62 +56,66 @@ std::vector<size_t[4]> * edgeNBH
         size_t vi = (*edgeNBH)[i][0];
         size_t vj = (*edgeNBH)[i][1];
         size_t vl = (*edgeNBH)[i][2];
-
         if(vr == vertexIndices->size()){
-            v_nbh_length = 3;
-            Edge.resize(2,6);
-            G.resize(6,4);
-            H.resize(2,6);
-            Edge<< -1,0,1,0, 0,0,
-            0,-1,0,1, 0,0;
+            for(int k = 0; k<3; k++){
+                G_6(2*k,0) = vertices[0][(*edgeNBH)[i][k]].x;
+                G_6(2*k,1) = vertices[0][(*edgeNBH)[i][k]].y;
+                G_6(2*k,2) = 1;
+                G_6(2*k,3) = 0;
+                G_6(2*k+1,0) = vertices[0][(*edgeNBH)[i][k]].y;
+                G_6(2*k+1,1) = -1*vertices[0][(*edgeNBH)[i][k]].x;
+                G_6(2*k+1,2) = 0;
+                G_6(2*k+1,3) = 1;
+            }
+            G_inv_6 = ((G_6.transpose()*G_6).inverse())*G_6.transpose();
+            (*G_vector)[i] = G_inv_6;
         }
         else{
-            Edge.resize(2,8);
-            G.resize(8,4);
-            H.resize(2,8);
-            Edge<< -1,0,1,0, 0,0,0,0,
-            0,-1,0,1, 0,0,0,0;
-            G(6,0) = vertices[0][vr].x;
-            G(6,1) = vertices[0][vr].y;
-            G(6,2) = 1;
-            G(6,3) = 0;
-            G(7,0) = vertices[0][vr].y;
-            G(7,1) = -1*vertices[0][vr].x;
-            G(7,2) = 0;
-            G(7,3) = 1;
-        }
-        for(int k = 0; k<3; k++){
-            G(2*k,0) = vertices[0][(*edgeNBH)[i][k]].x;
-            G(2*k,1) = vertices[0][(*edgeNBH)[i][k]].y;
-            G(2*k,2) = 1;
-            G(2*k,3) = 0;
-            G(2*k+1,0) = vertices[0][(*edgeNBH)[i][k]].y;
-            G(2*k+1,1) = -1*vertices[0][(*edgeNBH)[i][k]].x;
-            G(2*k+1,2) = 0;
-            G(2*k+1,3) = 1;
+            for(int k = 0; k<4; k++){
+                G_8(2*k,0) = vertices[0][(*edgeNBH)[i][k]].x;
+                G_8(2*k,1) = vertices[0][(*edgeNBH)[i][k]].y;
+                G_8(2*k,2) = 1;
+                G_8(2*k,3) = 0;
+                G_8(2*k+1,0) = vertices[0][(*edgeNBH)[i][k]].y;
+                G_8(2*k+1,1) = -1*vertices[0][(*edgeNBH)[i][k]].x;
+                G_8(2*k+1,2) = 0;
+                G_8(2*k+1,3) = 1;
+            }
+            G_inv_8 = ((G_8.transpose()*G_8).inverse())*G_8.transpose();
+            (*G_vector)[i] = G_inv_8;
         }
 
-        //std::cout<<G<<"\n";
-        Eigen::MatrixXf G_inv_product = ((G.transpose()*G).inverse())*G.transpose();
-        (*G_vector)[i] = G_inv_product;
-
-        for(auto k =0; k<2*v_nbh_length; k++){
-            H(0,k) = G_inv_product(0,k);
-            H(1,k) = G_inv_product(1,k);
-        }
-    
         float edge_vij[2] = {vertices[0][vj].x - vertices[0][vi].x,vertices[0][vj].y - vertices[0][vi].y};
         EdgeMat<<edge_vij[0],edge_vij[1],
                 edge_vij[1],-1*edge_vij[0];
-    
-        Eigen::MatrixXf h = Edge - EdgeMat*H;
-
-        for(auto k = 0; k<v_nbh_length; k++){
-            A(2*i, 2*(*edgeNBH)[i][k]) = h(0,2*k);
-            A(2*i, 2*(*edgeNBH)[i][k]+1) = h(0,2*k+1);
-            A(2*i+1, 2*(*edgeNBH)[i][k]) = h(1,2*k);
-            A(2*i+1, 2*(*edgeNBH)[i][k]+1) = h(1,2*k+1); 
+        
+        if(vr == vertexIndices->size()){
+            for(auto k =0; k<6; k++){
+                H_6(0,k) = G_inv_6(0,k);
+                H_6(1,k) = G_inv_6(1,k);
+            }
+           h_6 = Edge_6 - EdgeMat*H_6;
+            for(auto k = 0; k<3; k++){
+                A(2*i, 2*(*edgeNBH)[i][k]) =   h_6(0,2*k);
+                A(2*i, 2*(*edgeNBH)[i][k]+1) = h_6(0,2*k+1);
+                A(2*i+1, 2*(*edgeNBH)[i][k]) = h_6(1,2*k);
+                A(2*i+1, 2*(*edgeNBH)[i][k]+1)=h_6(1,2*k+1); 
+            }
         }
+        else{
+            for(auto k =0; k<8; k++){
+                H_8(0,k) = G_inv_8(0,k);
+                H_8(1,k) = G_inv_8(1,k);
+            }
+            h_8 = Edge_8 - EdgeMat*H_8;
+            for(auto k = 0; k<4; k++){
+                A(2*i, 2*(*edgeNBH)[i][k]) =   h_8(0,2*k);
+                A(2*i, 2*(*edgeNBH)[i][k]+1) = h_8(0,2*k+1);
+                A(2*i+1, 2*(*edgeNBH)[i][k]) = h_8(1,2*k);
+                A(2*i+1, 2*(*edgeNBH)[i][k]+1)=h_8(1,2*k+1); 
+            }
+        }
+
     }
     //end of iterating loop.
     for(int i = 0; i<3; i++){
@@ -111,10 +130,8 @@ std::vector<size_t[4]> * edgeNBH
         A(vertexIndices->size() * 2 + 2*i,2*handle->handleIndex[i]) = w;
         A(vertexIndices->size() * 2 + 2*i+1,2*handle->handleIndex[i]+1) = w;
     }
-    //std::cout<<B<<"\n";
-    Eigen::VectorXf newV = (A.transpose() * A).llt().solve(A.transpose()*B);
-    //Eigen::VectorXf newV = (A.transpose() * A)inverse()*A.transpose()*B;
 
+    Eigen::VectorXf newV = (A.transpose() * A).llt().solve(A.transpose()*B);
     for(size_t i = 0; i < vertices->size(); i++){
         intermediateVertices[0][i].x = newV[2*i];//*0.35;
         intermediateVertices[0][i].y = newV[2*i+1];//*0.35;
@@ -175,7 +192,7 @@ std::vector<size_t[4]> * edgeNBH
         A(i,(*edgeNBH)[i][0]) = -1;
         A(i,(*edgeNBH)[i][1]) = 1;
     }
-    
+
     Eigen::VectorXf newVx = (A.transpose() * A).llt().solve(A.transpose()*Bx);
     Eigen::VectorXf newVy = (A.transpose() * A).llt().solve(A.transpose()*By);
     for(size_t i = 0; i<vertices->size(); i++){
