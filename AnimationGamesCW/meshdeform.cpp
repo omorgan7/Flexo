@@ -7,18 +7,15 @@
 //
 
 #include "meshdeform.hpp"
-#include <fstream>
 #include <cmath>
 
 void deformMesh(std::vector<glm::vec3> *vertices, std::vector<unsigned int> * vertexIndices, Handles * handle){
     std::vector<glm::vec3> intermediateVertices = std::vector<glm::vec3>(vertices->size());
-    MeshDeformStepOne(vertices, vertexIndices, handle, &intermediateVertices);
-    for(size_t i = 0; i<vertices->size(); i++){
-        vertices[0][i].x = intermediateVertices[i].x;
-        vertices[0][i].y = intermediateVertices[i].y;
-    }
+    std::vector<Eigen::MatrixXf> G_vector;
+    std::vector<size_t[4]> edgeNBH;
+    MeshDeformStepOne(vertices, vertexIndices, handle, &intermediateVertices, &G_vector, &edgeNBH);
     //modifies vertices in place in step 2.
-    //MeshDeformStepTwo(vertices, vertexIndices, handle, &intermediateVertices);
+    MeshDeformStepTwo(vertices, vertexIndices, handle, &intermediateVertices, &G_vector, &edgeNBH);
 }
 
 inline size_t findinarray(size_t * arr, size_t elem, size_t length){
@@ -30,7 +27,14 @@ inline size_t findinarray(size_t * arr, size_t elem, size_t length){
     return length;
 }
 
-void MeshDeformStepOne(std::vector<glm::vec3> * vertices, std::vector<unsigned int> * vertexIndices, Handles * handle,std::vector<glm::vec3> * intermediateVertices){
+void MeshDeformStepOne(
+std::vector<glm::vec3> * vertices,
+std::vector<unsigned int> * vertexIndices,
+Handles * handle,
+std::vector<glm::vec3> * intermediateVertices,
+std::vector<Eigen::MatrixXf> * G_vector,
+std::vector<size_t[4]> * edgeNBH
+){
     
     int w = 1000;
     Eigen::MatrixXf A = Eigen::MatrixXf::Zero(vertexIndices->size() * 2 + 6,vertices->size() * 2);
@@ -39,6 +43,8 @@ void MeshDeformStepOne(std::vector<glm::vec3> * vertices, std::vector<unsigned i
     Eigen::MatrixXf G(8,4);
     Eigen::MatrixXf H(2,8);
     Eigen::MatrixXf EdgeMat(2,2);
+    *G_vector = std::vector<Eigen::MatrixXf>(vertexIndices->size());
+    *edgeNBH = std::vector<size_t[4]>(vertexIndices->size());
     size_t vi;
     size_t vj;
     size_t vl;
@@ -125,6 +131,11 @@ void MeshDeformStepOne(std::vector<glm::vec3> * vertices, std::vector<unsigned i
 
             //std::cout<<G<<"\n";
             Eigen::MatrixXf G_inv_product = ((G.transpose()*G).inverse())*G.transpose();
+            (*G_vector)[i] = G_inv_product;
+            for(auto k = 0; k<4; k++){
+                (*edgeNBH)[i][k] = vertex_nbh[k];
+            }
+            
             for(auto k =0; k<2*v_nbh_length; k++){
                 H(0,k) = G_inv_product(0,k);
                 H(1,k) = G_inv_product(1,k);
@@ -169,8 +180,71 @@ void MeshDeformStepOne(std::vector<glm::vec3> * vertices, std::vector<unsigned i
         intermediateVertices[0][i].x = newV[2*i];//*0.35;
         intermediateVertices[0][i].y = newV[2*i+1];//*0.35;
     }
-    
-    
 }
+
+void MeshDeformStepTwo(
+std::vector<glm::vec3> * vertices,
+std::vector<unsigned int> * vertexIndices,
+Handles * handle,
+std::vector<glm::vec3> * intermediateVertices,
+std::vector<Eigen::MatrixXf> * G_vector,
+std::vector<size_t[4]> * edgeNBH
+){
+    int w = 1000;
+    Eigen::MatrixXf A  = Eigen::MatrixXf::Zero(vertexIndices->size() + 3,vertices->size());
+    Eigen::VectorXf Bx(vertexIndices->size() + 3);
+    Eigen::VectorXf By(vertexIndices->size() + 3);
+    Eigen::VectorXf V_NBH(8);
+    Eigen::Matrix2f T;
+    Eigen::Vector2f Edge;
+    for(int i = 0; i<3; i++){
+        if(i == handle->newHandleIndex){
+            Bx[vertexIndices->size() +i] = w*handle->newCoords[0];
+            By[vertexIndices->size() +i] = w*handle->newCoords[1];
+        }     else{
+            Bx[vertexIndices->size() +i] = w*vertices[0][handle->handleIndex[i]].x;
+            By[vertexIndices->size() +i] = w*vertices[0][handle->handleIndex[i]].y;
+        }
+        A(vertexIndices->size() +i,handle->handleIndex[i]) = w;
+    }
+    for(int i=0;i<vertexIndices->size(); i++){
+        size_t vr = (*edgeNBH)[i][3];
+        int numIndices =4;
+        if(vr == vertexIndices->size()){
+            numIndices = 3;
+            V_NBH.resize(6);
+        }
+        else{
+            V_NBH.resize(8);
+        }
+        for(int j = 0; j<numIndices; j++){
+            V_NBH(2*j) = vertices[0][(*edgeNBH)[i][j]].x;
+            V_NBH(2*j+1) = vertices[0][(*edgeNBH)[i][j]].y;
+        }
+        Eigen::MatrixXf G = (*G_vector)[i];
+        Eigen::VectorXf cs = G*V_NBH;
+        float normaliser = sqrt(cs[0]*cs[0] + cs[1]*cs[1]);
+        T<<
+        cs[0]/normaliser,cs[1]/normaliser,
+        -1*cs[1]/normaliser, cs[0]/normaliser;
+        Edge<<
+        vertices[0][(*edgeNBH)[i][1]].x - vertices[0][(*edgeNBH)[i][0]].x,
+        vertices[0][(*edgeNBH)[i][1]].y - vertices[0][(*edgeNBH)[i][0]].y;
+        Eigen::Vector2f Te_product = T*Edge;
+        Bx[i] = Te_product[0];
+        By[i] = Te_product[1];
+        A(i,(*edgeNBH)[i][0]) = -1;
+        A(i,(*edgeNBH)[i][1]) = 1;
+    }
+    Eigen::MatrixXf A_inv = (A.transpose() * A).inverse()*A.transpose();
+    Eigen::VectorXf newVx = A_inv*Bx;
+    Eigen::VectorXf newVy = A_inv*By;
+    for(size_t i = 0; i<vertices->size(); i++){
+        vertices[0][i].x = newVx[i];
+        vertices[0][i].y = newVy[i];
+    }
+
+}
+
 
 

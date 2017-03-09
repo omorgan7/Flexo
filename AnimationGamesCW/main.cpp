@@ -23,6 +23,7 @@
 #include "meshdeform.hpp"
 
 int global_mouse_press = -1;
+bool global_left_toggle = 0;
 bool global_mouse_toggle = 0;
 double global_xpos = 0;
 double global_ypos= 0;
@@ -93,7 +94,8 @@ int main(int argc, const char * argv[]) {
     glBindVertexArray(VertexArrayID);
     
     // Create and compile our GLSL program from the shaders
-    std::string ShaderPath = "/Users/Owen/Documents/Code/C++/AnimationGamesCW/AnimationGamesCW/GLSL Shaders/";
+    //std::string ShaderPath = "/Users/Owen/Documents/Code/C++/AnimationGamesCW/AnimationGamesCW/GLSL Shaders/";
+    std::string ShaderPath = "H:/dos/C++/Bender/AnimationGamesCW/GLSL Shaders/";
     auto vertexPath = ShaderPath + "SimpleVertexShader.glsl";
     auto fragmentPath = ShaderPath + "SimpleFragmentShader.glsl";
     GLuint shapeprogramID = LoadShaders( vertexPath.c_str(), fragmentPath.c_str());
@@ -107,7 +109,8 @@ int main(int argc, const char * argv[]) {
     std::vector<unsigned int> vertexIndices;
 
     
-    bool res = loadSimpleOBJ("/Users/Owen/Dropbox/bender.obj", vertices, vertexIndices);
+    //bool res = loadSimpleOBJ("/Users/Owen/Dropbox/bender.obj", vertices, vertexIndices);
+    bool res = loadSimpleOBJ("C:/Dropbox/Dropbox/bender.obj", vertices, vertexIndices);
     std::cout<<res<<"\n";
     float temp;
     for(auto i = vertices.begin(); i !=vertices.end(); i++){
