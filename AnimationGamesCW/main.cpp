@@ -181,23 +181,25 @@ int main(int argc, const char * argv[]) {
         }
         if(global_right_toggle){
             global_right_toggle = !global_right_toggle;
-            convertScreenPointsToWorldPoints(width, height, &inverseProjection, &screenCoords[3][0], &screenCoords[3][1]);
-            handle.newCoords[0] = screenCoords[3][0];
-            handle.newCoords[1] = screenCoords[3][1];
-            handle.newHandleIndex = 0;
-            auto distance = two_norm(vertices[handle.handleIndex[0]].x, vertices[handle.handleIndex[0]].y, handle.newCoords[0], handle.newCoords[1]);
-            for(int i = 1; i<3; i++){
-                auto new_distance = two_norm(vertices[handle.handleIndex[i]].x, vertices[handle.handleIndex[i]].y, handle.newCoords[0], handle.newCoords[1]);
-                if(new_distance < distance){
-                    distance = new_distance;
-                    handle.newHandleIndex = i;
+            if(global_mouse_press > 1){
+                convertScreenPointsToWorldPoints(width, height, &inverseProjection, &screenCoords[3][0], &screenCoords[3][1]);
+                handle.newCoords[0] = screenCoords[3][0];
+                handle.newCoords[1] = screenCoords[3][1];
+                handle.newHandleIndex = 0;
+                auto distance = two_norm(vertices[handle.handleIndex[0]].x, vertices[handle.handleIndex[0]].y, handle.newCoords[0], handle.newCoords[1]);
+                for(int i = 1; i<3; i++){
+                    auto new_distance = two_norm(vertices[handle.handleIndex[i]].x, vertices[handle.handleIndex[i]].y, handle.newCoords[0], handle.newCoords[1]);
+                    if(new_distance < distance){
+                        distance = new_distance;
+                        handle.newHandleIndex = i;
+                    }
                 }
+                deformMesh(&vertices, &vertexIndices, &handle,&edgeNBH);
+                glBindBuffer(GL_ARRAY_BUFFER,vertexbuffer);
+                glBufferSubData(GL_ARRAY_BUFFER,0, vertices.size()*sizeof(glm::vec3), &vertices[0]);
+                screenCoords[handle.newHandleIndex][0] = handle.newCoords[0];
+                screenCoords[handle.newHandleIndex][1] = handle.newCoords[1];
             }
-            deformMesh(&vertices, &vertexIndices, &handle,&edgeNBH);
-            glBindBuffer(GL_ARRAY_BUFFER,vertexbuffer);
-            glBufferSubData(GL_ARRAY_BUFFER,0, vertices.size()*sizeof(glm::vec3), &vertices[0]);
-            screenCoords[handle.newHandleIndex][0] = handle.newCoords[0];
-            screenCoords[handle.newHandleIndex][1] = handle.newCoords[1];
         }
         
         // Clear the screen
