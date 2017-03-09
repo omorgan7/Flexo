@@ -21,18 +21,36 @@ struct Handles{
     size_t newHandleIndex;
 };
 
+inline size_t findinarray(size_t * arr, size_t elem, size_t length){
+    for(size_t i =0; i<length; i++){
+        if(arr[i] == elem){
+            return i;
+        }
+    }
+    return length;
+}
+
 void deformMesh(std::vector<glm::vec3> * vertices,
                 std::vector<unsigned int> * vertexIndices,
-                Handles * handle);
+                Handles * handle,
+                std::vector<size_t[4]> * edgeNBH);
 
 void MeshDeformStepOne(std::vector<glm::vec3> * vertices,
                        std::vector<unsigned int> * vertexIndices,
                        Handles * handle,
-                       std::vector<glm::vec3> * intermediateVertices);
+                       std::vector<glm::vec3> * intermediateVertices,
+                       std::vector<Eigen::MatrixXf> * G_vector,
+                       std::vector<size_t[4]> * edgeNBH);
 
 void MeshDeformStepTwo(std::vector<glm::vec3> * vertices,
                        std::vector<unsigned int> * vertexIndices,
                        Handles * handle,
-                       std::vector<glm::vec3> * intermediateVertices);
+                       std::vector<glm::vec3> * intermediateVertices,
+                       std::vector<Eigen::MatrixXf> * G_vector,
+                       std::vector<size_t[4]> * edgeNBH);
+                       
+void getEdgeNeighbourHoods(std::vector<glm::vec3> * vertices, 
+                           std::vector<unsigned int> * vertexIndices,
+                           std::vector<size_t[4]> * edgeNBH);
 
 #endif /* meshdeform_hpp */

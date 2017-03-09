@@ -11,7 +11,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <vector>
-
+#include <omp.h>
 #include <string>
 #include <cmath>
 
@@ -24,6 +24,7 @@
 
 int global_mouse_press = -1;
 bool global_left_toggle = 0;
+bool global_right_toggle = 0;
 bool global_mouse_toggle = 0;
 double global_xpos = 0;
 double global_ypos= 0;
@@ -32,13 +33,19 @@ double global_ypos= 0;
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS){
-        glfwGetCursorPos(window, &global_xpos, &global_ypos);
-        global_mouse_press++;
-        global_mouse_toggle = !global_mouse_toggle;
+    if (action == GLFW_PRESS){
+        if(button == GLFW_MOUSE_BUTTON_LEFT){
+            global_mouse_press++;
+            global_left_toggle = !global_left_toggle;
+            glfwGetCursorPos(window, &global_xpos, &global_ypos);
+        }
+        else if(button == GLFW_MOUSE_BUTTON_RIGHT){
+            global_right_toggle = !global_right_toggle;
+            glfwGetCursorPos(window, &global_xpos, &global_ypos);
+        } 
     }
-
 }
+
 
 inline float two_norm( float x1, float y1, float x2, float y2){
     return (float) sqrt((x1 - x2)*(x1-x2) + (y1-y2)*(y1-y2));
@@ -163,33 +170,34 @@ int main(int argc, const char * argv[]) {
     glm::mat4 inverseProjection = glm::inverse(shapeMVP);
     std::vector<glm::vec2> screenCoords = std::vector<glm::vec2>(4);
     glm::vec3 handleColor = glm::vec3(0.4f,0.8f,1.0f);
+    std::vector<size_t[4]> edgeNBH;
+    getEdgeNeighbourHoods(&vertices, &vertexIndices,&edgeNBH);
     do{
         
-        if(global_mouse_toggle){
-            global_mouse_toggle = !global_mouse_toggle;
-            convertScreenPointsToWorldPoints(width, height, &inverseProjection, &screenCoords[global_mouse_press%4][0], &screenCoords[global_mouse_press%4][1]);
-            if(global_mouse_press%4 == 3){
-                handle.newHandleIndex = findVertexModelIndex(vertices, screenCoords[global_mouse_press%4][0], screenCoords[global_mouse_press%4][1]);
-                handle.newCoords[0] = screenCoords[global_mouse_press%4][0];
-                handle.newCoords[1] = screenCoords[global_mouse_press%4][1];
-                handle.newHandleIndex = 0;
-                auto distance = two_norm(vertices[handle.handleIndex[0]].x, vertices[handle.handleIndex[0]].y, handle.newCoords[0], handle.newCoords[1]);
-                for(int i = 1; i<3; i++){
-                    auto new_distance = two_norm(vertices[handle.handleIndex[i]].x, vertices[handle.handleIndex[i]].y, handle.newCoords[0], handle.newCoords[1]);
-                    if(new_distance < distance){
-                        distance = new_distance;
-                        handle.newHandleIndex = i;
-                    }
+        if(global_left_toggle){
+            global_left_toggle = !global_left_toggle;
+            convertScreenPointsToWorldPoints(width, height, &inverseProjection, &screenCoords[global_mouse_press%3][0], &screenCoords[global_mouse_press%3][1]);
+            handle.handleIndex[global_mouse_press%3] = findVertexModelIndex(vertices, screenCoords[global_mouse_press%3][0], screenCoords[global_mouse_press%3][1]);
+        }
+        if(global_right_toggle){
+            global_right_toggle = !global_right_toggle;
+            convertScreenPointsToWorldPoints(width, height, &inverseProjection, &screenCoords[3][0], &screenCoords[3][1]);
+            handle.newCoords[0] = screenCoords[3][0];
+            handle.newCoords[1] = screenCoords[3][1];
+            handle.newHandleIndex = 0;
+            auto distance = two_norm(vertices[handle.handleIndex[0]].x, vertices[handle.handleIndex[0]].y, handle.newCoords[0], handle.newCoords[1]);
+            for(int i = 1; i<3; i++){
+                auto new_distance = two_norm(vertices[handle.handleIndex[i]].x, vertices[handle.handleIndex[i]].y, handle.newCoords[0], handle.newCoords[1]);
+                if(new_distance < distance){
+                    distance = new_distance;
+                    handle.newHandleIndex = i;
                 }
-                deformMesh(&vertices, &vertexIndices, &handle);
-                glBindBuffer(GL_ARRAY_BUFFER,vertexbuffer);
-                glBufferSubData(GL_ARRAY_BUFFER,0, vertices.size()*sizeof(glm::vec3), &vertices[0]);
-                //glBindBuffer(GL_ARRAY_BUFFER,0);
-                
             }
-            else{
-                handle.handleIndex[global_mouse_press%4] = findVertexModelIndex(vertices, screenCoords[global_mouse_press%4][0], screenCoords[global_mouse_press%4][1]);
-            }
+            deformMesh(&vertices, &vertexIndices, &handle,&edgeNBH);
+            glBindBuffer(GL_ARRAY_BUFFER,vertexbuffer);
+            glBufferSubData(GL_ARRAY_BUFFER,0, vertices.size()*sizeof(glm::vec3), &vertices[0]);
+            screenCoords[handle.newHandleIndex][0] = handle.newCoords[0];
+            screenCoords[handle.newHandleIndex][1] = handle.newCoords[1];
         }
         
         // Clear the screen
