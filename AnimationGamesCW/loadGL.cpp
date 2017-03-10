@@ -8,7 +8,7 @@
 
 #include "loadGL.hpp"
 
-bool GLFW_Initialisation_function(GLFWwindow** window, int width, int height){
+bool GLFW_Initialisation_function(GLFWwindow** window, int width, int height, int glmajor, int glminor){
     if(!glfwInit()){
         std::cerr<<"GLFW failed to initialise\n";
     };
@@ -17,8 +17,8 @@ bool GLFW_Initialisation_function(GLFWwindow** window, int width, int height){
     
     
     glfwWindowHint(GLFW_SAMPLES, 4); //Anti-Aliasing x4
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);//opengl version 4.1
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glmajor);//opengl version 4.1
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glminor);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
     

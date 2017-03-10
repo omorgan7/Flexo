@@ -200,7 +200,7 @@ std::vector<std::vector<size_t> > * edgeNBH
 
 }
 
-void getEdgeNeighbourHoods(std::vector<unsigned int> * vertexIndices,std::vector<std::vector<size_t> > * edgeNBH){
+int getEdgeNeighbourHoods(std::vector<unsigned int> * vertexIndices,std::vector<std::vector<size_t> > * edgeNBH){
     *edgeNBH = std::vector<std::vector<size_t> >(vertexIndices->size());
     size_t vi;
     size_t vj;
@@ -240,7 +240,8 @@ void getEdgeNeighbourHoods(std::vector<unsigned int> * vertexIndices,std::vector
             if(vj_location != 3){
                 vr = searchLoc[3-vi_location-vj_location];
                 if(vr > vertexIndices->size() ){
-                    std::cout<<"oh no!\n";
+                    std::cerr<<"Garbage access of the search for the neighbour. Program will exit";
+                    return EXIT_FAILURE;
                 }
                 break;
             }
@@ -250,4 +251,5 @@ void getEdgeNeighbourHoods(std::vector<unsigned int> * vertexIndices,std::vector
         (*edgeNBH)[i].push_back(vl);
         (*edgeNBH)[i].push_back(vr);
     }
+    return EXIT_SUCCESS;
 }

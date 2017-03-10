@@ -13,6 +13,6 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-bool GLFW_Initialisation_function(GLFWwindow** window, int width, int height);
+bool GLFW_Initialisation_function(GLFWwindow** window, int width, int height, int glmajor, int glminor);
 
 #endif /* loadGL_hpp */
