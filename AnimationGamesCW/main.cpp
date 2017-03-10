@@ -71,37 +71,38 @@ void convertScreenPointsToWorldPoints(int width, int height, glm::mat4 * inverse
                                       -2.0 * global_ypos / height + 1,0,1);
     glm::vec4 mappedTranslation = *inverseProjection*translation;
     
-    //std::cout<<ModelMat[3][0]<<" "<<ModelMat[3][1]<<"\n";
-    
     *x = mappedTranslation.x*mappedTranslation.z/mappedTranslation.w;
     *y = mappedTranslation.y*mappedTranslation.z/mappedTranslation.w;
 
 }
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
+
     auto width = 1280;
     auto height = 720;
+    int glmajor = 4;
+    int glminor = 1;
+    if(argc >1){
+        width = atoi(argv[1]);
+        height = atoi(argv[2]);
+        glmajor = atoi(argv[3]);
+        glminor = atoi(argv[4]);
+    }
+    
     GLFWwindow* window;
-    if(!GLFW_Initialisation_function(&window, width, height)){
+    if(!GLFW_Initialisation_function(&window, width, height, glmajor, glminor)){
         return EXIT_FAILURE;
     }
-    Handles handle;
-    glClearColor(1.0f, 1.0f, 1.0f, 0.0f); //makes the screen blue.
-    // Enable depth test
-    //glEnable(GL_DEPTH_TEST);
-    // Accept fragment if it closer to the camera than the former one
-    //glDepthFunc(GL_LESS);
     
-    // Cull triangles which normal is not towards the camera
-    //glEnable(GL_CULL_FACE);
+    Handles handle;
+    glClearColor(1.0f, 1.0f, 1.0f, 0.0f); //makes the screen white.
     
     GLuint VertexArrayID;
     glGenVertexArrays(1, &VertexArrayID);
     glBindVertexArray(VertexArrayID);
     
     // Create and compile our GLSL program from the shaders
-    std::string ShaderPath = "/Users/Owen/Documents/Code/C++/AnimationGamesCW/AnimationGamesCW/GLSL Shaders/";
+    std::string ShaderPath = "GLSL Shaders/";
     //std::string ShaderPath = "H:/dos/C++/Bender/AnimationGamesCW/GLSL Shaders/";
     auto vertexPath = ShaderPath + "SimpleVertexShader.glsl";
     auto fragmentPath = ShaderPath + "SimpleFragmentShader.glsl";
@@ -115,9 +116,19 @@ int main(int argc, const char * argv[]) {
     std::vector<glm::vec3> vertices;
     std::vector<unsigned int> vertexIndices;
 
+    std::string Meshobj;
+    bool LoadResult;
+    std::cout<<"Please enter the filename of the mesh to open:\n";
+    getline(std::cin,Meshobj);
+    while(1){
+        LoadResult = loadSimpleOBJ(Meshobj.c_str(), vertices, vertexIndices);
+        if(LoadResult){
+            break;
+        }
+        getline(std::cin,Meshobj);
+        std::cout<<"\n";
+    }
     
-    bool res = loadSimpleOBJ("/Users/Owen/Dropbox/bender.obj", vertices, vertexIndices);
-    //bool res = loadSimpleOBJ("C:/Dropbox/Dropbox/bender.obj", vertices, vertexIndices);
     float temp;
     for(auto i = vertices.begin(); i !=vertices.end(); i++){
         temp = i->x;
@@ -170,7 +181,10 @@ int main(int argc, const char * argv[]) {
     std::vector<glm::vec2> screenCoords = std::vector<glm::vec2>(4);
     glm::vec3 handleColor = glm::vec3(0.4f,0.8f,1.0f);
     std::vector<std::vector<size_t> > edgeNBH;
-    getEdgeNeighbourHoods(&vertexIndices,&edgeNBH);
+    int retval = getEdgeNeighbourHoods(&vertexIndices,&edgeNBH);
+    if(retval == EXIT_FAILURE){
+        return EXIT_FAILURE;
+    }
     do{
         
         if(global_left_toggle){
@@ -267,5 +281,5 @@ int main(int argc, const char * argv[]) {
     glfwTerminate();
     
 
-    return 0;
+    return EXIT_SUCCESS;
 }
