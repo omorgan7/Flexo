@@ -103,14 +103,22 @@ int main(int argc, const char * argv[]) {
     
     // Create and compile our GLSL program from the shaders
     std::string ShaderPath = "GLSL Shaders/";
-    //std::string ShaderPath = "H:/dos/C++/Bender/AnimationGamesCW/GLSL Shaders/";
     auto vertexPath = ShaderPath + "SimpleVertexShader.glsl";
     auto fragmentPath = ShaderPath + "SimpleFragmentShader.glsl";
     GLuint shapeprogramID = LoadShaders( vertexPath.c_str(), fragmentPath.c_str());
+    if(shapeprogramID == 0){
+        return EXIT_FAILURE;
+    }
+    
     GLuint ShapeMatID = glGetUniformLocation(shapeprogramID,"MVP");
     vertexPath = ShaderPath + "HandleVertexShader.glsl";
     fragmentPath = ShaderPath + "HandleFragmentShader.glsl";
     GLuint handleprogramID = LoadShaders( vertexPath.c_str(), fragmentPath.c_str());
+    
+    if(handleprogramID == 0){
+        return EXIT_FAILURE;
+    }
+    
     GLuint handleMatID = glGetUniformLocation(handleprogramID,"MVP");
     GLuint handleColorID = glGetUniformLocation(handleprogramID,"inColor");
     std::vector<glm::vec3> vertices;
