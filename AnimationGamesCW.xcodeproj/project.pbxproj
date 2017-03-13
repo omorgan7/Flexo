@@ -7,15 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5A1CC4E21E609E7C00015854 /* cameracontroller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A1CC4E01E609E7C00015854 /* cameracontroller.cpp */; };
 		5A545F371E5F007E0009AB6C /* objloader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A545F361E5F007E0009AB6C /* objloader.cpp */; };
-		5A8254071E5CC92B00FB8477 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A8254061E5CC92B00FB8477 /* main.cpp */; };
 		5A8254101E5CC96000FB8477 /* libglfw.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A82540D1E5CC96000FB8477 /* libglfw.dylib */; };
 		5A8254111E5CC96000FB8477 /* libGLEW.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A82540E1E5CC96000FB8477 /* libGLEW.dylib */; };
 		5A8254121E5CC96000FB8477 /* libGL.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A82540F1E5CC96000FB8477 /* libGL.dylib */; };
-		5A8254181E5CCB5000FB8477 /* loadGL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A8254161E5CCB5000FB8477 /* loadGL.cpp */; };
 		5A82541B1E5CCD2700FB8477 /* shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A82541A1E5CCD2700FB8477 /* shader.cpp */; };
-		5A904F441E70191D009ED14D /* meshdeform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5A904F421E70191D009ED14D /* meshdeform.cpp */; };
+		5ABB6B031E76B5890076618F /* cameracontroller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB6AFF1E76B5890076618F /* cameracontroller.cpp */; };
+		5ABB6B041E76B5890076618F /* loadGL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB6B001E76B5890076618F /* loadGL.cpp */; };
+		5ABB6B051E76B5890076618F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB6B011E76B5890076618F /* main.cpp */; };
+		5ABB6B061E76B5890076618F /* meshdeform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB6B021E76B5890076618F /* meshdeform.cpp */; };
 		5AF109381E64424E00EBC9CD /* HandleFragmentShader.glsl in Sources */ = {isa = PBXBuildFile; fileRef = 5AF109371E64424E00EBC9CD /* HandleFragmentShader.glsl */; };
 		5AF1093A1E64427500EBC9CD /* HandleVertexShader.glsl in Sources */ = {isa = PBXBuildFile; fileRef = 5AF109391E64427500EBC9CD /* HandleVertexShader.glsl */; };
 /* End PBXBuildFile section */
@@ -33,23 +33,23 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		5A1CC4E01E609E7C00015854 /* cameracontroller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cameracontroller.cpp; sourceTree = "<group>"; };
-		5A1CC4E11E609E7C00015854 /* cameracontroller.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = cameracontroller.hpp; sourceTree = "<group>"; };
 		5A545F351E5F007E0009AB6C /* objloader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = objloader.hpp; path = external/objloader.hpp; sourceTree = "<group>"; };
 		5A545F361E5F007E0009AB6C /* objloader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = objloader.cpp; path = external/objloader.cpp; sourceTree = "<group>"; };
 		5A8254031E5CC92B00FB8477 /* AnimationGamesCW */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AnimationGamesCW; sourceTree = BUILT_PRODUCTS_DIR; };
-		5A8254061E5CC92B00FB8477 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		5A82540D1E5CC96000FB8477 /* libglfw.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.dylib; path = ../../../../../../usr/local/Cellar/glfw/3.2.1/lib/libglfw.dylib; sourceTree = "<group>"; };
 		5A82540E1E5CC96000FB8477 /* libGLEW.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.dylib; path = ../../../../../../usr/local/Cellar/glew/2.0.0/lib/libGLEW.dylib; sourceTree = "<group>"; };
 		5A82540F1E5CC96000FB8477 /* libGL.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGL.dylib; path = ../../../../../../System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib; sourceTree = "<group>"; };
-		5A8254161E5CCB5000FB8477 /* loadGL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = loadGL.cpp; sourceTree = "<group>"; };
-		5A8254171E5CCB5000FB8477 /* loadGL.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = loadGL.hpp; sourceTree = "<group>"; };
 		5A8254191E5CCD2700FB8477 /* shader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = shader.hpp; path = external/shader.hpp; sourceTree = "<group>"; };
 		5A82541A1E5CCD2700FB8477 /* shader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = shader.cpp; path = external/shader.cpp; sourceTree = "<group>"; };
 		5A82541C1E5CCD7C00FB8477 /* SimpleFragmentShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SimpleFragmentShader.glsl; path = "GLSL Shaders/SimpleFragmentShader.glsl"; sourceTree = "<group>"; };
 		5A82541D1E5CCD7C00FB8477 /* SimpleVertexShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = SimpleVertexShader.glsl; path = "GLSL Shaders/SimpleVertexShader.glsl"; sourceTree = "<group>"; };
-		5A904F421E70191D009ED14D /* meshdeform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = meshdeform.cpp; sourceTree = "<group>"; };
-		5A904F431E70191D009ED14D /* meshdeform.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = meshdeform.hpp; sourceTree = "<group>"; };
+		5ABB6AFF1E76B5890076618F /* cameracontroller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cameracontroller.cpp; path = AnimationGamesCW/source/cameracontroller.cpp; sourceTree = "<group>"; };
+		5ABB6B001E76B5890076618F /* loadGL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = loadGL.cpp; path = AnimationGamesCW/source/loadGL.cpp; sourceTree = "<group>"; };
+		5ABB6B011E76B5890076618F /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = AnimationGamesCW/source/main.cpp; sourceTree = "<group>"; };
+		5ABB6B021E76B5890076618F /* meshdeform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = meshdeform.cpp; path = AnimationGamesCW/source/meshdeform.cpp; sourceTree = "<group>"; };
+		5ABB6B0C1E76B6A10076618F /* cameracontroller.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = cameracontroller.hpp; path = AnimationGamesCW/include/cameracontroller.hpp; sourceTree = "<group>"; };
+		5ABB6B0D1E76B6A10076618F /* loadGL.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = loadGL.hpp; path = AnimationGamesCW/include/loadGL.hpp; sourceTree = "<group>"; };
+		5ABB6B0E1E76B6A10076618F /* meshdeform.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = meshdeform.hpp; path = AnimationGamesCW/include/meshdeform.hpp; sourceTree = "<group>"; };
 		5AF109371E64424E00EBC9CD /* HandleFragmentShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = HandleFragmentShader.glsl; path = "GLSL Shaders/HandleFragmentShader.glsl"; sourceTree = "<group>"; };
 		5AF109391E64427500EBC9CD /* HandleVertexShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = HandleVertexShader.glsl; path = "GLSL Shaders/HandleVertexShader.glsl"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -90,15 +90,10 @@
 		5A8254051E5CC92B00FB8477 /* AnimationGamesCW */ = {
 			isa = PBXGroup;
 			children = (
+				5ABB6B0B1E76B5C80076618F /* include */,
+				5ABB6B071E76B5920076618F /* source */,
 				5A82541E1E5CCDA500FB8477 /* Shaders */,
 				5A8254151E5CCA9800FB8477 /* external */,
-				5A8254061E5CC92B00FB8477 /* main.cpp */,
-				5A904F421E70191D009ED14D /* meshdeform.cpp */,
-				5A904F431E70191D009ED14D /* meshdeform.hpp */,
-				5A1CC4E01E609E7C00015854 /* cameracontroller.cpp */,
-				5A1CC4E11E609E7C00015854 /* cameracontroller.hpp */,
-				5A8254161E5CCB5000FB8477 /* loadGL.cpp */,
-				5A8254171E5CCB5000FB8477 /* loadGL.hpp */,
 			);
 			path = AnimationGamesCW;
 			sourceTree = "<group>";
@@ -123,6 +118,29 @@
 				5AF109391E64427500EBC9CD /* HandleVertexShader.glsl */,
 			);
 			name = Shaders;
+			sourceTree = "<group>";
+		};
+		5ABB6B071E76B5920076618F /* source */ = {
+			isa = PBXGroup;
+			children = (
+				5ABB6AFF1E76B5890076618F /* cameracontroller.cpp */,
+				5ABB6B001E76B5890076618F /* loadGL.cpp */,
+				5ABB6B011E76B5890076618F /* main.cpp */,
+				5ABB6B021E76B5890076618F /* meshdeform.cpp */,
+			);
+			name = source;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		5ABB6B0B1E76B5C80076618F /* include */ = {
+			isa = PBXGroup;
+			children = (
+				5ABB6B0C1E76B6A10076618F /* cameracontroller.hpp */,
+				5ABB6B0D1E76B6A10076618F /* loadGL.hpp */,
+				5ABB6B0E1E76B6A10076618F /* meshdeform.hpp */,
+			);
+			name = include;
+			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -182,13 +200,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5ABB6B041E76B5890076618F /* loadGL.cpp in Sources */,
+				5ABB6B061E76B5890076618F /* meshdeform.cpp in Sources */,
 				5AF109381E64424E00EBC9CD /* HandleFragmentShader.glsl in Sources */,
-				5A904F441E70191D009ED14D /* meshdeform.cpp in Sources */,
+				5ABB6B031E76B5890076618F /* cameracontroller.cpp in Sources */,
 				5A82541B1E5CCD2700FB8477 /* shader.cpp in Sources */,
-				5A1CC4E21E609E7C00015854 /* cameracontroller.cpp in Sources */,
-				5A8254181E5CCB5000FB8477 /* loadGL.cpp in Sources */,
+				5ABB6B051E76B5890076618F /* main.cpp in Sources */,
 				5A545F371E5F007E0009AB6C /* objloader.cpp in Sources */,
-				5A8254071E5CC92B00FB8477 /* main.cpp in Sources */,
 				5AF1093A1E64427500EBC9CD /* HandleVertexShader.glsl in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
