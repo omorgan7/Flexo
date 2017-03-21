@@ -1,6 +1,6 @@
 # Bender
 
-![I'm back baby](http://static.comicvine.com/uploads/original/5/56434/1524097-zz.jpg)
+![I'm back baby](https://raw.githubusercontent.com/omorgan7/Bender/master/results/bender3.png)
 
 Surface-based mesh deformation for Computer Animation and Games 2 Coursework on the EngD programme. 
 
