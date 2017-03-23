@@ -28,7 +28,9 @@ OpenMP is not supported on the default (xcode) version of Clang, but can be if y
 
 On CL:
 
-Todo.
+    cl /EHsc source\*.cpp /I include /I external external\*.cpp /openmp /O2 /link /NODEFAULTLIB:"LIBCMT" "path_to_glfw3.lib" "path_to_glew32.lib" "C:\Program Files (x86)\Windows Kits\8.1\Lib\winv6.3\um\x86\OpenGL32.Lib"  "user32.lib" "gdi32.lib"  "shell32.lib" "msvcrt.lib"
+
+Additionally, to run the program will need a copy of `glew32.dll` to put in `C:/Windows` and `glfw3.dll` to be put in `C:/Windows/System32`. Running `win_install.bat` with administrator priviledges will copy these two files in. 
 
 ## Running:
 
