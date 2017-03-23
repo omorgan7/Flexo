@@ -197,12 +197,15 @@ int main(int argc, const char * argv[]) {
         
         if(global_left_toggle){
             global_left_toggle = !global_left_toggle;
+            //get the screen points on a left click.
             convertScreenPointsToWorldPoints(width, height, &inverseProjection, &screenCoords[global_mouse_press%3][0], &screenCoords[global_mouse_press%3][1]);
             handle.handleIndex[global_mouse_press%3] = findVertexModelIndex(vertices, screenCoords[global_mouse_press%3][0], screenCoords[global_mouse_press%3][1]);
         }
         if(global_right_toggle){
             global_right_toggle = !global_right_toggle;
             if(global_mouse_press > 1){
+
+                //get the screen points on a right click.
                 convertScreenPointsToWorldPoints(width, height, &inverseProjection, &screenCoords[3][0], &screenCoords[3][1]);
                 handle.newCoords[0] = screenCoords[3][0];
                 handle.newCoords[1] = screenCoords[3][1];
@@ -215,7 +218,10 @@ int main(int argc, const char * argv[]) {
                         handle.newHandleIndex = i;
                     }
                 }
+                //run the mesh deformation code
                 deformMesh(&vertices, &vertexIndices, &handle,&edgeNBH);
+
+                //update the new vertices after the mesh has been deformed.
                 glBindBuffer(GL_ARRAY_BUFFER,vertexbuffer);
                 glBufferSubData(GL_ARRAY_BUFFER,0, vertices.size()*sizeof(glm::vec3), &vertices[0]);
                 screenCoords[handle.newHandleIndex][0] = handle.newCoords[0];
@@ -231,7 +237,7 @@ int main(int argc, const char * argv[]) {
         glUniformMatrix4fv(ShapeMatID, 1, GL_FALSE, &shapeMVP[0][0]);
 
         
-        // 1rst attribute buffer : vertices
+        // draw the triangles in wireframe mode.
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glEnableVertexAttribArray(0);
         glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
@@ -241,7 +247,7 @@ int main(int argc, const char * argv[]) {
         // Draw the mesh
         glDrawElements(GL_TRIANGLES,vertexIndices.size(), GL_UNSIGNED_INT,0); // 3 indices starting at 0 -> 1 triangle
         
-        
+        //draw it in fill mode.
         glUseProgram(handleprogramID);
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
         

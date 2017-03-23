@@ -18,13 +18,13 @@ void deformMesh(std::vector<glm::vec3> *vertices, std::vector<unsigned int> * ve
 }
 
 void MeshDeformStepOne(
-std::vector<glm::vec3> * vertices,
-std::vector<unsigned int> * vertexIndices,
-Handles * handle,
-std::vector<glm::vec3> * intermediateVertices,
-std::vector<Eigen::MatrixXf> * G_vector,
-std::vector<std::vector<size_t> > * edgeNBH
-){
+                        std::vector<glm::vec3> * vertices,
+                        std::vector<unsigned int> * vertexIndices,
+                        Handles * handle,
+                        std::vector<glm::vec3> * intermediateVertices,
+                        std::vector<Eigen::MatrixXf> * G_vector,
+                        std::vector<std::vector<size_t> > * edgeNBH
+                        ){
     
     int w = 1000;
     Eigen::MatrixXf A = Eigen::MatrixXf::Zero(vertexIndices->size() * 2 + 6,vertices->size() * 2);
@@ -131,8 +131,8 @@ std::vector<std::vector<size_t> > * edgeNBH
 
     Eigen::VectorXf newV = (A.transpose() * A).llt().solve(A.transpose()*B);
     for(size_t i = 0; i < vertices->size(); i++){
-        intermediateVertices[0][i].x = newV[2*i];//*0.35;
-        intermediateVertices[0][i].y = newV[2*i+1];//*0.35;
+        intermediateVertices[0][i].x = newV[2*i];
+        intermediateVertices[0][i].y = newV[2*i+1];
     }
 }
 
