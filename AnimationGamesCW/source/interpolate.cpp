@@ -7,7 +7,7 @@ void MeshInterpolate::ComputeInitialMatricies(void){
     Eigen::MatrixXf A = Eigen::MatrixXf::Zero(4*vertexIndices.size()/3,2*mesh_a.size()-2);
 
     for(size_t i = 0; i<vertexIndices.size(); i+=3){
-        for(int j = 0; j<3 j++){
+        for(int j = 0; j<3; j++){
             M(2*j,0) = mesh_a[vertexIndices[i+j]].x;
             M(2*j,1) = mesh_a[vertexIndices[i+j]].y;
             M(2*j,2) = 1;
@@ -78,9 +78,9 @@ std::vector<glm::vec3> MeshInterpolate::Interpolate(float t){
 }
 
 Eigen::MatrixXf MeshInterpolate::SingleTriangleInterpolation(Eigen::MatrixXf a, float t){
-    JacobiSVD<MatrixXf> svd(a,ComputeFullU,ComputeFullV);
+    Eigen::JacobiSVD<Eigen::MatrixXf> svd(a,Eigen::ComputeFullU|Eigen::ComputeFullV);
     Eigen::VectorXf Singular = svd.singularValues();
-    Eigen::MatrixXf Ry = svd.MatrixU() * (svd.MatrixV()).transpose();
+    Eigen::MatrixXf Ry = svd.matrixU() * (svd.matrixV()).transpose();
     glm::mat3 Ry_temp(1.0);
     Ry_temp[0][0] =Ry(0,0);
     Ry_temp[1][0] =Ry(0,1);
@@ -90,18 +90,18 @@ Eigen::MatrixXf MeshInterpolate::SingleTriangleInterpolation(Eigen::MatrixXf a, 
     Eigen::MatrixXf S_diag(2,2);
     S_diag<<Singular(0),0,
             0,Singular(1);
-    Eigen::MatrixXf S_gamma = svd.MatrixV() * S_diag * (svd.MatrixV()).transpose();
+    Eigen::MatrixXf S_gamma = svd.matrixV() * S_diag * (svd.matrixV()).transpose();
 
-    glm::gtc::fquat q0 = {1.0f,0.0f,0.0f,0.0f};
-    glm::gtc::fquat q1 = glm::gtc::quat_cast(Ry_temp);
+    glm::fquat q0 = {1.0f,0.0f,0.0f,0.0f};
+    glm::fquat q1 = glm::quat_cast(Ry_temp);
 
-    glm::gtc::fquat q_interp = glm::gtc::mix(q0,q1,t);
+    glm::fquat q_interp = glm::mix(q0,q1,t);
 
-    glm::mat3 r_mat = glm::gtc::mat3_cast(q_interp);
+    glm::mat3 r_mat = glm::mat3_cast(q_interp);
 
-    Eigen::MatriXf R_interp(2,2);
+    Eigen::MatrixXf R_interp(2,2);
     R_interp<<r_mat[0][0],r_mat[1][0],
               r_mat[0][1],r_mat[1][1];
     
-    return R_interp * ((1.0f-t)*(MatrixXf(2,2).identity()) + t*S_diag;
+    return R_interp * ((1.0f-t)*(Eigen::MatrixXf(2,2).setIdentity()) + t*S_diag);
 }

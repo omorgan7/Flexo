@@ -24,9 +24,9 @@ class MeshInterpolate{
     private:
     Eigen::MatrixXf A_inv;
     std::vector<Eigen::MatrixXf> P_inverse, A_gamma;
-    std::vector<glm::vec3> mesh_a, std::vector<glm::vec3> mesh_b;
+    std::vector<glm::vec3> mesh_a,mesh_b;
     std::vector<unsigned int> vertexIndices;
     Eigen::MatrixXf SingleTriangleInterpolation(Eigen::MatrixXf a, float t);
-}
+};
 
 #endif

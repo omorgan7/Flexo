@@ -45,7 +45,6 @@ int main(int argc, const char * argv[]) {
         return EXIT_FAILURE;
     }
     
-    Handles handle;
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f); //makes the screen white.
     
     GLuint VertexArrayID;
@@ -130,7 +129,7 @@ int main(int argc, const char * argv[]) {
     ModelMat[3][1] = -2;
     ModelMat[3][3] = 1;
 
-    
+
 
     do{
 
