@@ -1,6 +1,6 @@
 #include "interpolate.hpp"
 
-void MeshInterpolate::ComputeInitialMatricies(void){
+void MeshInterpolate::ComputeInitialMatrices(void){
     Eigen::MatrixXf M = Eigen::MatrixXf::Zero(6,6);
     Eigen::VectorXf q(6);
     Eigen::MatrixXf A_temp(2,2);

@@ -129,9 +129,13 @@ int main(int argc, const char * argv[]) {
     ModelMat[3][1] = -2;
     ModelMat[3][3] = 1;
 
-
+    MeshInterpolate meshinterp(vertices_a,vertices_b,vertexIndices);
+    meshinterp.ComputeInitialMatrices();
 
     do{
+        std::vector<glm::vec3> newVerts = meshinterp.Interpolate(0.5f);
+        glBindBuffer(GL_ARRAY_BUFFER,vertexbuffer);
+        glBufferSubData(GL_ARRAY_BUFFER,0, newVerts.size()*sizeof(glm::vec3), &newVerts[0]);
 
         // Clear the screen
         glClear( GL_COLOR_BUFFER_BIT );

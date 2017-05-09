@@ -18,7 +18,7 @@ class MeshInterpolate{
         P_inverse = std::vector<Eigen::MatrixXf>(vertexIndices.size()/3);
         A_gamma = std::vector<Eigen::MatrixXf>(vertexIndices.size()/3);
     }
-    void ComputeInitialMatricies(void);
+    void ComputeInitialMatrices(void);
     std::vector<glm::vec3> Interpolate(float t);
 
     private:
