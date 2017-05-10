@@ -20,13 +20,6 @@
 #include "cameracontroller.hpp"
 #include "interpolate.hpp"
 
-int global_mouse_press = -1;
-bool global_left_toggle = 0;
-bool global_right_toggle = 0;
-bool global_mouse_toggle = 0;
-double global_xpos = 0;
-double global_ypos= 0;
-
 int main(int argc, const char * argv[]) {
 
     auto width = 1280;
@@ -52,7 +45,8 @@ int main(int argc, const char * argv[]) {
     glBindVertexArray(VertexArrayID);
     
     // Create and compile our GLSL program from the shaders
-    std::string ShaderPath = "GLSL Shaders/";
+    //std::string ShaderPath = "GLSL Shaders/";
+    std::string ShaderPath = "/Users/Owen/Documents/Code/C++/Flexo/AnimationGamesCW/GLSL Shaders/";
     auto vertexPath = ShaderPath + "SimpleVertexShader.glsl";
     auto fragmentPath = ShaderPath + "SimpleFragmentShader.glsl";
     GLuint shapeprogramID = LoadShaders( vertexPath.c_str(), fragmentPath.c_str());
@@ -61,51 +55,45 @@ int main(int argc, const char * argv[]) {
     }
     GLuint ShapeMatID = glGetUniformLocation(shapeprogramID,"MVP");
 
-    std::vector<glm::vec3> vertices_a,vertices_b;
-    std::vector<unsigned int> vertexIndices;
-
-    std::string Meshobj;
+    //std::vector<glm::vec3> vertices_a,vertices_b;
+    std::vector<unsigned int> vertexIndices, unusedVI;
+    std::vector<std::vector<glm::vec3> > vertices = std::vector<std::vector<glm::vec3> >(6);
+    std::string Meshobj = "/Users/Owen/Documents/Code/C++/AnimationGamesCW/AnimationGamesCW/bender";
+    std::string StrEnd = std::to_string(0) + ".obj";
     bool LoadResult;
-    std::cout<<"Please enter the filename of the first mesh to open:\n";
-    getline(std::cin,Meshobj);
-    while(1){
-        LoadResult = loadSimpleOBJ(Meshobj.c_str(), vertices_a, vertexIndices);
-        if(LoadResult){
-            break;
-        }
-        getline(std::cin,Meshobj);
-        std::cout<<"\n";
-    }
-    std::cout<<"Please enter the filename of the second mesh to open:\n";
-    getline(std::cin,Meshobj);
-    while(1){
-        LoadResult = loadSimpleOBJ(Meshobj.c_str(), vertices_b, vertexIndices);
-        if(LoadResult){
-            break;
-        }
-        getline(std::cin,Meshobj);
-        std::cout<<"\n";
+    //std::cout<<"Please enter the filename of the first mesh to open:\n";
+//    getline(std::cin,Meshobj);
+//    while(1){
+        LoadResult = loadSimpleOBJ((Meshobj+StrEnd).c_str(), vertices[0], vertexIndices);
+//        if(LoadResult){
+//            break;
+//        }
+//        getline(std::cin,Meshobj);
+//        std::cout<<"\n";
+//    }
+    //std::cout<<"Please enter the filename of the second mesh to open:\n";
+    //Meshobj = "/Users/Owen/Dropbox/bender_simple2.obj";
+//    getline(std::cin,Meshobj);
+//    while(1){
+    for(int i = 1; i<6; i++){
+        StrEnd = std::to_string(i) + ".obj";
+        LoadResult = loadSimpleOBJ((Meshobj+StrEnd).c_str(), vertices[i], unusedVI);
     }
     
+//        if(LoadResult){
+//            break;
+//        }
+//        getline(std::cin,Meshobj);
+//        std::cout<<"\n";
+//    }
     
-    float temp;
-    for(auto i = vertices_a.begin(); i !=vertices_a.end(); i++){
-        temp = i->x;
-        i->x = i->y;
-        i->y = -temp;
-    }
-    for(auto i = vertices_b.begin(); i !=vertices_b.end(); i++){
-        temp = i->x;
-        i->x = i->y;
-        i->y = -temp;
-    }
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     //vertices
     GLuint vertexbuffer;
     glGenBuffers(1, &vertexbuffer);
     glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-    glBufferData(GL_ARRAY_BUFFER, vertices_a.size()*sizeof(glm::vec3), &vertices_a[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertices[0].size()*sizeof(glm::vec3), &vertices[0][0], GL_STATIC_DRAW);
     
     GLuint elementbuffer;
     glGenBuffers(1, &elementbuffer);
@@ -124,16 +112,28 @@ int main(int argc, const char * argv[]) {
     computeScalingMatrix(width,height,&ProjectionMat);
     
     glm::mat4 shapeMVP = ProjectionMat*ViewMat*ModelMat;
-    ModelMat = glm::mat4(0.2);
+    ModelMat = glm::mat4(0.2f);
     ModelMat[3][0] = -2;
     ModelMat[3][1] = -2;
     ModelMat[3][3] = 1;
-
-    MeshInterpolate meshinterp(vertices_a,vertices_b,vertexIndices);
-    meshinterp.ComputeInitialMatrices();
-
+    std::vector<MeshInterpolate> meshinterp;
+    //MeshInterpolate meshinterp;
+    for(int i =0; i<5; i++){
+        meshinterp.push_back(MeshInterpolate(vertices[i],vertices[i+1],vertexIndices));
+        meshinterp[i].ComputeInitialMatrices();
+    }
+    float t = 0.0f;
+    int sign = 1;
+    int meshIndex = 0;
     do{
-        std::vector<glm::vec3> newVerts = meshinterp.Interpolate(0.5f);
+        
+        std::vector<glm::vec3> newVerts = meshinterp[meshIndex].Interpolate(t);
+        
+        t+= 1.0f/60.0f;
+        if(t>1.0f){
+            meshIndex = (meshIndex + 1) % 5;
+            t = 0.0f;
+        }
         glBindBuffer(GL_ARRAY_BUFFER,vertexbuffer);
         glBufferSubData(GL_ARRAY_BUFFER,0, newVerts.size()*sizeof(glm::vec3), &newVerts[0]);
 

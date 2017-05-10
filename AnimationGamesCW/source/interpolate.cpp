@@ -17,8 +17,10 @@ void MeshInterpolate::ComputeInitialMatrices(void){
             q(2*j) = mesh_b[vertexIndices[i+j]].x;
             q(2*j+1) = mesh_b[vertexIndices[i+j]].y;
         }
+
         Eigen::MatrixXf P_temp = ((M.transpose()*M).inverse()) * M.transpose();
         Eigen::MatrixXf P_i = Eigen::MatrixXf::Zero(4,6);
+        
         for(int j=0; j<4; j++){
             for(int k = 0; k<6; k++){
                 P_i(j,k) = P_temp(j+(j>1),k);
@@ -30,10 +32,11 @@ void MeshInterpolate::ComputeInitialMatrices(void){
              Al(3),Al(4);
         A_gamma[i/3] = A_temp;
         for(int j = 0; j<4; j++){
-            for(int k = 0; k<3; j++){
+            for(int k = 0; k<3; k++){
                 if(vertexIndices[i+k] > 0){
-                    A(4*(i/3) + j, 2*vertexIndices[i+k]-2) =P_i(j,2*k);
-                    A(4*(i/3) + j, 2*vertexIndices[i+k]-1) =P_i(j,2*k+1);
+
+                    A(4*(i/3) + j, 2*vertexIndices[i+k]-2) = P_i(j,2*k);
+                    A(4*(i/3) + j, 2*vertexIndices[i+k]-1) = P_i(j,2*k+1);
                 }
             }
         }
@@ -50,7 +53,7 @@ std::vector<glm::vec3> MeshInterpolate::Interpolate(float t){
     for(size_t i = 0; i< vertexIndices.size(); i+=3){
         Eigen::MatrixXf A_out = SingleTriangleInterpolation(A_gamma[i/3],t);
         for(int j = 0; j<4; j++){
-            b(i/3 + j) = A_out(j/2,j%2);
+            b(4*i/3 + j) = A_out(j/2,j%2);
         }
         bool foundZero = 0;
         int foundZeroIndex;
@@ -64,7 +67,7 @@ std::vector<glm::vec3> MeshInterpolate::Interpolate(float t){
         if(foundZero){
             Eigen::MatrixXf P_temp = P_inverse[i/3];
             for(int j = 0; j<4; j++){
-                b(i/3 + j) -= P_temp(j,2*foundZeroIndex)*NewVertices[0].x + P_temp(j,2*foundZeroIndex + 1)*NewVertices[0].y;
+                b(4*i/3 + j) -= P_temp(j,2*foundZeroIndex)*NewVertices[0].x + P_temp(j,2*foundZeroIndex + 1)*NewVertices[0].y;
             }
         }
     }
@@ -83,8 +86,8 @@ Eigen::MatrixXf MeshInterpolate::SingleTriangleInterpolation(Eigen::MatrixXf a, 
     Eigen::MatrixXf Ry = svd.matrixU() * (svd.matrixV()).transpose();
     glm::mat3 Ry_temp(1.0);
     Ry_temp[0][0] =Ry(0,0);
-    Ry_temp[1][0] =Ry(0,1);
-    Ry_temp[0][1] =Ry(1,0);
+    Ry_temp[0][1] =Ry(0,1);
+    Ry_temp[1][0] =Ry(1,0);
     Ry_temp[1][1] =Ry(1,1);
     
     Eigen::MatrixXf S_diag(2,2);
@@ -100,8 +103,8 @@ Eigen::MatrixXf MeshInterpolate::SingleTriangleInterpolation(Eigen::MatrixXf a, 
     glm::mat3 r_mat = glm::mat3_cast(q_interp);
 
     Eigen::MatrixXf R_interp(2,2);
-    R_interp<<r_mat[0][0],r_mat[1][0],
-              r_mat[0][1],r_mat[1][1];
+    R_interp<<r_mat[0][0],r_mat[0][1],
+              r_mat[1][0],r_mat[1][1];
     
     return R_interp * ((1.0f-t)*(Eigen::MatrixXf(2,2).setIdentity()) + t*S_diag);
 }

@@ -15,7 +15,7 @@
 		5ABB6B031E76B5890076618F /* cameracontroller.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB6AFF1E76B5890076618F /* cameracontroller.cpp */; };
 		5ABB6B041E76B5890076618F /* loadGL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB6B001E76B5890076618F /* loadGL.cpp */; };
 		5ABB6B051E76B5890076618F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB6B011E76B5890076618F /* main.cpp */; };
-		5ABB6B061E76B5890076618F /* meshdeform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5ABB6B021E76B5890076618F /* meshdeform.cpp */; };
+		5AC564621EC2233300755211 /* interpolate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5AC564611EC2233300755211 /* interpolate.cpp */; };
 		5AF109381E64424E00EBC9CD /* HandleFragmentShader.glsl in Sources */ = {isa = PBXBuildFile; fileRef = 5AF109371E64424E00EBC9CD /* HandleFragmentShader.glsl */; };
 		5AF1093A1E64427500EBC9CD /* HandleVertexShader.glsl in Sources */ = {isa = PBXBuildFile; fileRef = 5AF109391E64427500EBC9CD /* HandleVertexShader.glsl */; };
 /* End PBXBuildFile section */
@@ -46,10 +46,10 @@
 		5ABB6AFF1E76B5890076618F /* cameracontroller.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = cameracontroller.cpp; path = AnimationGamesCW/source/cameracontroller.cpp; sourceTree = "<group>"; };
 		5ABB6B001E76B5890076618F /* loadGL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = loadGL.cpp; path = AnimationGamesCW/source/loadGL.cpp; sourceTree = "<group>"; };
 		5ABB6B011E76B5890076618F /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = AnimationGamesCW/source/main.cpp; sourceTree = "<group>"; };
-		5ABB6B021E76B5890076618F /* meshdeform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = meshdeform.cpp; path = AnimationGamesCW/source/meshdeform.cpp; sourceTree = "<group>"; };
 		5ABB6B0C1E76B6A10076618F /* cameracontroller.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = cameracontroller.hpp; path = AnimationGamesCW/include/cameracontroller.hpp; sourceTree = "<group>"; };
 		5ABB6B0D1E76B6A10076618F /* loadGL.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = loadGL.hpp; path = AnimationGamesCW/include/loadGL.hpp; sourceTree = "<group>"; };
-		5ABB6B0E1E76B6A10076618F /* meshdeform.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = meshdeform.hpp; path = AnimationGamesCW/include/meshdeform.hpp; sourceTree = "<group>"; };
+		5AC564611EC2233300755211 /* interpolate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = interpolate.cpp; path = AnimationGamesCW/source/interpolate.cpp; sourceTree = "<group>"; };
+		5AC564631EC2233C00755211 /* interpolate.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = interpolate.hpp; path = AnimationGamesCW/include/interpolate.hpp; sourceTree = "<group>"; };
 		5AF109371E64424E00EBC9CD /* HandleFragmentShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = HandleFragmentShader.glsl; path = "GLSL Shaders/HandleFragmentShader.glsl"; sourceTree = "<group>"; };
 		5AF109391E64427500EBC9CD /* HandleVertexShader.glsl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = HandleVertexShader.glsl; path = "GLSL Shaders/HandleVertexShader.glsl"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -126,7 +126,7 @@
 				5ABB6AFF1E76B5890076618F /* cameracontroller.cpp */,
 				5ABB6B001E76B5890076618F /* loadGL.cpp */,
 				5ABB6B011E76B5890076618F /* main.cpp */,
-				5ABB6B021E76B5890076618F /* meshdeform.cpp */,
+				5AC564611EC2233300755211 /* interpolate.cpp */,
 			);
 			name = source;
 			path = ..;
@@ -137,7 +137,7 @@
 			children = (
 				5ABB6B0C1E76B6A10076618F /* cameracontroller.hpp */,
 				5ABB6B0D1E76B6A10076618F /* loadGL.hpp */,
-				5ABB6B0E1E76B6A10076618F /* meshdeform.hpp */,
+				5AC564631EC2233C00755211 /* interpolate.hpp */,
 			);
 			name = include;
 			path = ..;
@@ -201,13 +201,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				5ABB6B041E76B5890076618F /* loadGL.cpp in Sources */,
-				5ABB6B061E76B5890076618F /* meshdeform.cpp in Sources */,
 				5AF109381E64424E00EBC9CD /* HandleFragmentShader.glsl in Sources */,
 				5ABB6B031E76B5890076618F /* cameracontroller.cpp in Sources */,
 				5A82541B1E5CCD2700FB8477 /* shader.cpp in Sources */,
 				5ABB6B051E76B5890076618F /* main.cpp in Sources */,
 				5A545F371E5F007E0009AB6C /* objloader.cpp in Sources */,
 				5AF1093A1E64427500EBC9CD /* HandleVertexShader.glsl in Sources */,
+				5AC564621EC2233300755211 /* interpolate.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,7 +240,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -315,7 +315,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
 				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
 				GCC_VERSION = "";
@@ -384,7 +384,7 @@
 				5A8254091E5CC92B00FB8477 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		5A82540A1E5CC92B00FB8477 /* Build configuration list for PBXNativeTarget "AnimationGamesCW" */ = {
 			isa = XCConfigurationList;
@@ -393,7 +393,7 @@
 				5A82540C1E5CC92B00FB8477 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};
