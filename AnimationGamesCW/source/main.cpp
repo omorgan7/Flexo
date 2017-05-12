@@ -57,35 +57,31 @@ int main(int argc, const char * argv[]) {
 
     //std::vector<glm::vec3> vertices_a,vertices_b;
     std::vector<unsigned int> vertexIndices, unusedVI;
-    std::vector<std::vector<glm::vec3> > vertices = std::vector<std::vector<glm::vec3> >(6);
+    std::vector<std::vector<glm::vec3> > vertices = std::vector<std::vector<glm::vec3> >(2);
     std::string Meshobj = "/Users/Owen/Documents/Code/C++/AnimationGamesCW/AnimationGamesCW/bender";
     std::string StrEnd = std::to_string(0) + ".obj";
     bool LoadResult;
-    //std::cout<<"Please enter the filename of the first mesh to open:\n";
-//    getline(std::cin,Meshobj);
-//    while(1){
-        LoadResult = loadSimpleOBJ((Meshobj+StrEnd).c_str(), vertices[0], vertexIndices);
-//        if(LoadResult){
-//            break;
-//        }
-//        getline(std::cin,Meshobj);
-//        std::cout<<"\n";
-//    }
-    //std::cout<<"Please enter the filename of the second mesh to open:\n";
-    //Meshobj = "/Users/Owen/Dropbox/bender_simple2.obj";
-//    getline(std::cin,Meshobj);
-//    while(1){
-    for(int i = 1; i<6; i++){
-        StrEnd = std::to_string(i) + ".obj";
-        LoadResult = loadSimpleOBJ((Meshobj+StrEnd).c_str(), vertices[i], unusedVI);
+    std::cout<<"Please enter the filename of the first mesh to open:\n";
+    getline(std::cin,Meshobj);
+    while(1){
+        LoadResult = loadSimpleOBJ(Meshobj.c_str(), vertices[0], vertexIndices);
+        if(LoadResult){
+            break;
+        }
+        getline(std::cin,Meshobj);
+        std::cout<<"\n";
     }
-    
-//        if(LoadResult){
-//            break;
-//        }
-//        getline(std::cin,Meshobj);
-//        std::cout<<"\n";
-//    }
+    std::cout<<"Please enter the filename of the second mesh to open:\n";
+    Meshobj = "/Users/Owen/Dropbox/bender_simple2.obj";
+    getline(std::cin,Meshobj);
+    while(1){
+        LoadResult = loadSimpleOBJ(Meshobj.c_str(), vertices[1], unusedVI);
+        if(LoadResult){
+            break;
+        }
+        getline(std::cin,Meshobj);
+        std::cout<<"\n";
+    }
     
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -116,23 +112,18 @@ int main(int argc, const char * argv[]) {
     ModelMat[3][0] = -2;
     ModelMat[3][1] = -2;
     ModelMat[3][3] = 1;
-    std::vector<MeshInterpolate> meshinterp;
-    //MeshInterpolate meshinterp;
-    for(int i =0; i<5; i++){
-        meshinterp.push_back(MeshInterpolate(vertices[i],vertices[i+1],vertexIndices));
-        meshinterp[i].ComputeInitialMatrices();
-    }
+    MeshInterpolate meshinterp(vertices[0],vertices[1],vertexIndices);
+    
     float t = 0.0f;
     int sign = 1;
-    int meshIndex = 0;
     do{
         
-        std::vector<glm::vec3> newVerts = meshinterp[meshIndex].Interpolate(t);
+        std::vector<glm::vec3> newVerts = meshinterp.Interpolate(t);
         
-        t+= 1.0f/60.0f;
+        t+= sign*1.0f/60.0f;
         if(t>1.0f){
-            meshIndex = (meshIndex + 1) % 5;
             t = 0.0f;
+            sign *=-1;
         }
         glBindBuffer(GL_ARRAY_BUFFER,vertexbuffer);
         glBufferSubData(GL_ARRAY_BUFFER,0, newVerts.size()*sizeof(glm::vec3), &newVerts[0]);
