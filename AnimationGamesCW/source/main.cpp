@@ -112,7 +112,11 @@ int main(int argc, const char * argv[]) {
     ModelMat[3][0] = -2;
     ModelMat[3][1] = -2;
     ModelMat[3][3] = 1;
+    
     MeshInterpolate meshinterp(vertices[0],vertices[1],vertexIndices);
+    
+    //A_inv and P computed here.
+    meshinterp.ComputeInitialMatrices();
     
     float t = 0.0f;
     int sign = 1;

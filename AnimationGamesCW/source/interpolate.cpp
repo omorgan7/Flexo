@@ -7,6 +7,7 @@ void MeshInterpolate::ComputeInitialMatrices(void){
     Eigen::MatrixXf A = Eigen::MatrixXf::Zero(4*vertexIndices.size()/3,2*mesh_a.size()-2);
 
     for(size_t i = 0; i<vertexIndices.size(); i+=3){
+        //for each triangle, assemble the ideal affine transformation matrix and store for later.
         for(int j = 0; j<3; j++){
             M(2*j,0) = mesh_a[vertexIndices[i+j]].x;
             M(2*j,1) = mesh_a[vertexIndices[i+j]].y;
@@ -31,6 +32,7 @@ void MeshInterpolate::ComputeInitialMatrices(void){
         A_temp << Al(0),Al(1),
              Al(3),Al(4);
         A_gamma[i/3] = A_temp;
+        //Add the contribution of each inverse p matrix into A.
         for(int j = 0; j<4; j++){
             for(int k = 0; k<3; k++){
                 if(vertexIndices[i+k] > 0){
@@ -46,9 +48,12 @@ void MeshInterpolate::ComputeInitialMatrices(void){
 
 std::vector<glm::vec3> MeshInterpolate::Interpolate(float t){
     std::vector<glm::vec3> NewVertices = std::vector<glm::vec3>(mesh_a.size());
+    
+    //lerp the first vertex.
     NewVertices[0].x = (1.0f-t) * mesh_a[0].x + t*mesh_b[0].x;
     NewVertices[0].y = (1.0f-t) * mesh_a[0].y + t*mesh_b[0].y;
     NewVertices[0].z = mesh_a[0].z;
+    
     Eigen::VectorXf b(4*vertexIndices.size()/3);
     for(size_t i = 0; i< vertexIndices.size(); i+=3){
         Eigen::MatrixXf A_out = SingleTriangleInterpolation(A_gamma[i/3],t);
@@ -67,6 +72,7 @@ std::vector<glm::vec3> MeshInterpolate::Interpolate(float t){
         if(foundZero){
             Eigen::MatrixXf P_temp = P_inverse[i/3];
             for(int j = 0; j<4; j++){
+                //because we lerp the first vertex, we must undo the affine transformation that would have been performed.
                 b(4*i/3 + j) -= P_temp(j,2*foundZeroIndex)*NewVertices[0].x + P_temp(j,2*foundZeroIndex + 1)*NewVertices[0].y;
             }
         }
@@ -81,6 +87,11 @@ std::vector<glm::vec3> MeshInterpolate::Interpolate(float t){
 }
 
 Eigen::MatrixXf MeshInterpolate::SingleTriangleInterpolation(Eigen::MatrixXf a, float t){
+    //helper function to compute the ideal affine transformation matrix for a single triangle.
+    
+    //note: mixes GLM vec/mats with Eigen vec/mats.
+    
+    
     Eigen::JacobiSVD<Eigen::MatrixXf> svd(a,Eigen::ComputeFullU|Eigen::ComputeFullV);
     Eigen::VectorXf Singular = svd.singularValues();
     Eigen::MatrixXf Ry = svd.matrixU() * (svd.matrixV()).transpose();
